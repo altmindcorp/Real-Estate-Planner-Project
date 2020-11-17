@@ -5,15 +5,8 @@ using UnityEngine;
 public class PlanObjectWindow : PlanObject
 { 
     private float bottomHeight; //in sm
-    private float topHeight; 
-
-    public PlanObjectWindow(Vector2[] coords, int id, float bottomHeight, float topHeight)
-    {
-        this.bottomHeight = bottomHeight;
-        this.topHeight = topHeight;
-        this.coords = coords;
-        this.id = id;
-    }
+    private float topHeight;
+    private Vector3 orientation;
 
     public float GetBottomHeight()
     {
@@ -23,5 +16,15 @@ public class PlanObjectWindow : PlanObject
     public float GetTopHeight()
     {
         return topHeight;
+    }
+
+    public Vector3 GetOrientation()
+    {
+        return orientation;
+    }
+
+    public void SetOrientation(Vector3 orientation)
+    {
+        this.orientation = orientation;
     }
 }

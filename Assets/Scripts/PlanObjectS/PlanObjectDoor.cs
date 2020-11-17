@@ -5,15 +5,9 @@ using UnityEngine;
 public class PlanObjectDoor : PlanObject
 {
     private float topHeight;
+    private Vector3 orientation;
 
-    public PlanObjectDoor(Vector2[] coords, int id, float topHeight)
-    {
-        this.coords = coords;
-        this.id = id;
-        this.topHeight = topHeight;
-    }
-
-    public float GettopHeight()
+    public float GetTopHeight()
     {
         return topHeight;
     }
