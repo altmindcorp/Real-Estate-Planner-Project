@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.EventSystems;
 
 public class Pointer : MonoBehaviour
 {
     public TMP_Dropdown modeDropdown;//0 - add, 1 - delete, 2 - move
     public TMP_Dropdown objectTypeDropdown;//0 - add anchor, 1- add wall, 2 - add window
-    public Vector3 scale;
+    [SerializeField]
+    private Vector3 scale;
     public Material anchorMaterial;
     public Material wallMaterial;
     public Material windowMaterial;
@@ -30,7 +32,7 @@ public class Pointer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
             if (Physics.Raycast(camera.ScreenPointToRay(Input.mousePosition), out hit))
             {
@@ -50,7 +52,7 @@ public class Pointer : MonoBehaviour
                             planObj = hit.transform.gameObject.GetComponent<PlanObject>();
                             if (planObj is PlanObjectAnchor)
                             {
-                                currentGameObject = StaticClass.CreateSimpWall(planObj.GetVertices()[0],planObj.GetScale(), wallMaterial);
+                                currentGameObject = StaticClass.CreateSimpWall(planObj.GetVertices()[0], planObj.GetScale(), wallMaterial);
                             }
                         }
                     }
@@ -73,7 +75,7 @@ public class Pointer : MonoBehaviour
                         }
                         else
                         {
-                            Debug.Log("Not Plan Object");
+                            //Debug.Log("Not Plan Object");
                         }
                     }
 
@@ -111,11 +113,18 @@ public class Pointer : MonoBehaviour
                     }
                     else
                     {
+                        
                         var wallPlanObject = currentGameObject.GetComponent<PlanObjectSimpWall>();
+                        //Debug.Log("Wall OBj Direction: " + wallPlanObject.GetDirection());
                         if (wallPlanObject.GetStartPoint() != Vector3.zero)
                         {
-                            Debug.Log("Setup anchor in point: " + wallPlanObject.GetStartPoint());
+                            //Debug.Log("Setup anchor in point: " + wallPlanObject.GetStartPoint());
                             StaticClass.CreateAnchor(wallPlanObject.GetStartPoint(), scale, anchorMaterial);
+                        }
+
+                        else
+                        {
+                            //Debug.Log("No Start Point");
                         }
                     }
                 }
@@ -147,7 +156,30 @@ public class Pointer : MonoBehaviour
 
     Vector3 GetStartPoint(Vector3 hitPoint)
     {
-        return new Vector3((int)hitPoint.x, (int)hitPoint.y, hitPoint.z - 0.001f);
+        Debug.Log("HitPoint: " + hitPoint.x.ToString("F5") + " " + hitPoint.y.ToString("F5"));
+        if (GridScaler.mode == 0)
+        {
+            var newCoords = new Vector3((int)(hit.point.x / 0.01f) * 0.01f, (int)(hit.point.y / 0.01f) * 0.01f, hit.point.z);
+            Debug.Log("New Coords: " + newCoords.x.ToString("F5") + " " + newCoords.y.ToString("F5"));
+            return newCoords;
+            
+        }
+
+        else if (GridScaler.mode == 1)
+        {
+            var newCoords = new Vector3((int)(hit.point.x / 0.1f) * 0.1f, (int)(hit.point.y / 0.1f) * 0.1f, hit.point.z);
+            Debug.Log("New Coords: " + newCoords.x.ToString("F5") + " " + newCoords.y.ToString("F5"));
+            return newCoords;
+        }
+
+        else if (GridScaler.mode == 2)
+        {
+            var newCoords = new Vector3((int)hitPoint.x, (int)hitPoint.y, hitPoint.z);
+            Debug.Log("New Coords: " + newCoords.x.ToString("F5") + " " + newCoords.y.ToString("F5"));
+            return newCoords;
+        }
+
+        return Vector3.zero;
     }
 
     Vector3 GetStartPoint(Vector3 hitPoint, GameObject simpWall)
@@ -180,5 +212,15 @@ public class Pointer : MonoBehaviour
             return new Vector3(scale.y, scale.x, 0);
         }
         else return Vector3.zero;
+    }
+
+    public void ChangeScaleX(TMP_InputField inputField)
+    {
+        scale.x = int.Parse(inputField.text);
+    }
+
+    public void ChangeScaleY(TMP_InputField inputField)
+    {
+        scale.y = int.Parse(inputField.text);
     }
 }
