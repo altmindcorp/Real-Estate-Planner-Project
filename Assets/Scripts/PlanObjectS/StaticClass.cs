@@ -16,7 +16,7 @@ public static class StaticClass
     private static float wallMultiplierZ = 0.001f;
 
     //temp window length
-    public static float windowLength = 4;
+    
 
     public static int createMode = 0;//0 - create, 1 - delete
     public static void SetCurrentPlan(Plan currentPlan)
@@ -71,7 +71,7 @@ public static class StaticClass
                 uvs[2].x += GridScaler.scaleValue / (wallVertices[2].y - wallVertices[3].y);
             }
 
-            if (point.x < wallVertices[3].x - GridScaler.scaleValue* 0.1f)
+            if (point.x < wallVertices[3].x - 0.001f)
             {
                 wallVertices[3].x -= GridScaler.scaleValue;
                 wallVertices[2].x -= GridScaler.scaleValue;
@@ -242,6 +242,19 @@ public static class StaticClass
         plan.currentID++;
         return plan.planGameObjects[plan.planGameObjects.Count - 1];
 
+    }
+
+    public static GameObject CreateDoor(Vector3 startPoint, Vector3 scale, Material material)
+    {
+        GameObject newGameObject = new GameObject("Door");
+        Vector3[] vertices = GetVertices(startPoint, scale, 0);
+        SetMesh(newGameObject, vertices, material);
+        var planObjectWindow = newGameObject.AddComponent<PlanObjectDoor>();
+        planObjectWindow.SetTag("PlanObject");
+        newGameObject.transform.Translate(Vector3.back * anchorMultiplierZ);
+        plan.planGameObjects.Add(newGameObject);
+        plan.currentID++;
+        return plan.planGameObjects[plan.planGameObjects.Count - 1];
     }
 
     private static Vector3[] GetVertices(Vector3 startpoint, Vector3 scale, float depth)

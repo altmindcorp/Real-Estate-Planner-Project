@@ -6,14 +6,22 @@ using UnityEngine.EventSystems;
 
 public class Pointer : MonoBehaviour
 {
+    
+    public TMP_Text topText;
+    public TMP_Text bottomText;
     public TMP_Dropdown modeDropdown;//0 - add, 1 - delete, 2 - move
     public TMP_Dropdown objectTypeDropdown;//0 - add anchor, 1- add wall, 2 - add window
+    public TMP_InputField topInputField;
+    public TMP_InputField bottomInputField;
     [SerializeField]
     private Vector3 scale;
     public Material anchorMaterial;
     public Material wallMaterial;
     public Material windowMaterial;
     public Material doorMaterial;
+
+    public float windowLength = 4;
+    public float doorLength = 4;
     private RaycastHit hit;
     //private Ray ray;
     //private bool mouseHold = false;
@@ -25,6 +33,11 @@ public class Pointer : MonoBehaviour
     void Start()
     {
         Plan newPlan = new Plan();
+        //topInputField
+        topText.text = "Anchor X length, sm: ";
+        topText.text = "Anchor Y length, sm: ";
+        modeDropdown.value = 0;
+        objectTypeDropdown.value = 0;
         StaticClass.SetCurrentPlan(newPlan);
     }
     Vector3 direction;
@@ -56,7 +69,7 @@ public class Pointer : MonoBehaviour
                             }
                         }
                     }
-                    else if (objectTypeDropdown.value == 2)//object
+                    else if (objectTypeDropdown.value == 2)//window
                     {
                         if (hit.transform.gameObject.tag == "PlanObject")
                         {
@@ -65,7 +78,7 @@ public class Pointer : MonoBehaviour
                             if (planObj is PlanObjectSimpWall)
                             {
                                 Debug.Log("Create Window");
-                                currentGameObject = StaticClass.CreateWindow(GetStartPoint(hit.point, planObj.gameObject), GetWindowScale(planObj.gameObject), windowMaterial);
+                                currentGameObject = StaticClass.CreateWindow(GetStartPoint(hit.point, planObj.gameObject), GetObjectScale(planObj.gameObject), windowMaterial);
                             }
 
                             else if (planObj==null)
@@ -81,7 +94,21 @@ public class Pointer : MonoBehaviour
 
                     else if (objectTypeDropdown.value == 3)
                     {
-                        //create door
+                        if (hit.transform.gameObject.tag == "PlanObject")
+                        {
+                            planObj = hit.transform.gameObject.GetComponent<PlanObject>();
+
+                            if (planObj is PlanObjectSimpWall)
+                            {
+                                Debug.Log("Create Door");
+                                currentGameObject = StaticClass.CreateDoor(GetStartPoint(hit.point, planObj.gameObject), GetObjectScale(planObj.gameObject), doorMaterial);
+                            }
+
+                            else if (planObj == null)
+                            {
+                                Debug.Log("PlanObj is null");
+                            }
+                        }
                     }
                     if (planObj!=null)
                     {
@@ -199,6 +226,48 @@ public class Pointer : MonoBehaviour
         else return Vector3.zero;
     }
 
+    Vector3 GetObjectScale(GameObject simpWall)
+    {
+        Vector3 direction = simpWall.GetComponent<PlanObjectSimpWall>().GetDirection();
+        Vector3 scale = simpWall.GetComponent<PlanObjectSimpWall>().GetScale();
+        if (direction == Vector3.left || direction == Vector3.right)//horizontal
+        {
+            Debug.Log("Direction: " + direction);
+            scale.x = windowLength;
+            return scale;
+        }
+        else if (direction == Vector3.up || direction == Vector3.down)
+        {
+            Debug.Log("Direction: " + direction);
+            scale.x = scale.y;
+            scale.y = windowLength;
+
+            return scale;
+        }
+        else return Vector3.zero;
+    }
+
+    Vector3 GetDoorScale(GameObject simpWall)
+    {
+        Vector3 direction = simpWall.GetComponent<PlanObjectSimpWall>().GetDirection();
+        Vector3 scale = simpWall.GetComponent<PlanObjectSimpWall>().GetScale();
+        if (direction == Vector3.left || direction == Vector3.right)//horizontal
+        {
+            Debug.Log("Direction: " + direction);
+            scale.x = windowLength;
+            return scale;
+        }
+        else if (direction == Vector3.up || direction == Vector3.down)
+        {
+            Debug.Log("Direction: " + direction);
+            scale.x = scale.y;
+            scale.y = windowLength;
+
+            return scale;
+        }
+        else return Vector3.zero;
+    }
+
     Vector3 GetWindowScale(GameObject simpWall)
     {
         Vector3 direction = simpWall.GetComponent<PlanObjectSimpWall>().GetDirection();
@@ -206,18 +275,26 @@ public class Pointer : MonoBehaviour
         if (direction == Vector3.left || direction == Vector3.right)//horizontal
         {
             Debug.Log("Direction: " + direction);
-            scale.x = StaticClass.windowLength;
+            scale.x = windowLength;
             return scale;
         }
         else if (direction == Vector3.up || direction == Vector3.down)
         {
             Debug.Log("Direction: " + direction);
             scale.x = scale.y;
-            scale.y = StaticClass.windowLength;
+            scale.y = windowLength;
 
             return scale;
         }
         else return Vector3.zero;
+    }
+
+    void ChangeText(int value)
+    {
+        if (value==0)
+        {
+
+        }
     }
 
     public void ChangeScaleX(TMP_InputField inputField)
