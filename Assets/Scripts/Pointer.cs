@@ -186,13 +186,15 @@ public class Pointer : MonoBehaviour
     {
         PlanObjectSimpWall planObj = simpWall.GetComponent<PlanObjectSimpWall>();
         Vector3 direction = planObj.GetDirection();
+        Vector3 startPoint = GetStartPoint(hitPoint);
         if (direction == Vector3.left || direction == Vector3.right)
         {
-            return new Vector3((int)hitPoint.x, planObj.GetVertices()[0].y, 0);
+            
+            return new Vector3(startPoint.x, planObj.GetVertices()[0].y, 0);
         }
         else if (direction == Vector3.up || direction == Vector3.down)
         {
-            return new Vector3(planObj.GetVertices()[0].x, (int)hitPoint.y, 0);
+            return new Vector3(planObj.GetVertices()[0].x, startPoint.y, 0);
         }
         else return Vector3.zero;
     }
@@ -203,13 +205,17 @@ public class Pointer : MonoBehaviour
         Vector3 scale = simpWall.GetComponent<PlanObjectSimpWall>().GetScale();
         if (direction == Vector3.left || direction == Vector3.right)//horizontal
         {
+            Debug.Log("Direction: " + direction);
             scale.x = StaticClass.windowLength;
             return scale;
         }
         else if (direction == Vector3.up || direction == Vector3.down)
         {
+            Debug.Log("Direction: " + direction);
+            scale.x = scale.y;
             scale.y = StaticClass.windowLength;
-            return new Vector3(scale.y, scale.x, 0);
+
+            return scale;
         }
         else return Vector3.zero;
     }

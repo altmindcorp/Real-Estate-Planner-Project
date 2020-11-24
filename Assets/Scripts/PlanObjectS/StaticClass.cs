@@ -13,7 +13,7 @@ public static class StaticClass
     //z Coord Change
     private static float objectMultiplierZ = 0.003f;
     private static float anchorMultiplierZ = 0.002f;
-    private static float wallMultiplierZ = 0.0015f;
+    private static float wallMultiplierZ = 0.001f;
 
     //temp window length
     public static float windowLength = 4;
@@ -188,7 +188,7 @@ public static class StaticClass
 
     public static GameObject CreateSimpWall(Vector3 startPoint, Vector3 scale, Material material)
     {
-        Vector3[] vertices = GetVertices(startPoint, scale, wallMultiplierZ);
+        Vector3[] vertices = GetVertices(startPoint, scale, 0);
         GameObject newGameObject = new GameObject("Simple Wall");
         PlanObjectSimpWall planObjectSimpWall = newGameObject.AddComponent<PlanObjectSimpWall>();
         SetMesh(newGameObject, vertices, material);
@@ -202,7 +202,7 @@ public static class StaticClass
         return plan.planGameObjects[plan.planGameObjects.Count - 1];
     }
 
-    public static GameObject CreateWindow(GameObject gameObjectWall, Vector3 point, Vector3 scale, Material material)
+    /*public static GameObject CreateWindow(GameObject gameObjectWall, Vector3 point, Vector3 scale, Material material)
     {
         Vector3 startPoint = Vector3.zero;
         var planObjectWall = gameObjectWall.GetComponent<PlanObject>() as PlanObjectSimpWall;
@@ -219,6 +219,7 @@ public static class StaticClass
             scale.y = temp;
         }
         GameObject newGameObject = new GameObject("Window" + plan.currentID);
+        
         Vector3[] vertices = GetVertices(startPoint, scale, 0);
         SetMesh(newGameObject, vertices, material);
         var planObjectWindow = newGameObject.AddComponent<PlanObjectWindow>();
@@ -227,16 +228,16 @@ public static class StaticClass
         plan.currentID++;
         Debug.Log("Create Window");
         return plan.planGameObjects[plan.planGameObjects.Count - 1];
-    }
+    }*/
 
     public static GameObject CreateWindow(Vector3 startPoint, Vector3 scale, Material material)
     {
         GameObject newGameObject = new GameObject("Window");
-        Vector3[] vertices = GetVertices(startPoint, scale, objectMultiplierZ);
+        Vector3[] vertices = GetVertices(startPoint, scale, 0);
         SetMesh(newGameObject, vertices, material);
         var planObjectWindow = newGameObject.AddComponent<PlanObjectWindow>();
         planObjectWindow.SetTag("PlanObject");
-        //newGameObject.transform.Translate(Vector3.back * anchorMultiplierZ);
+        newGameObject.transform.Translate(Vector3.back * anchorMultiplierZ);
         plan.planGameObjects.Add(newGameObject);
         plan.currentID++;
         return plan.planGameObjects[plan.planGameObjects.Count - 1];
