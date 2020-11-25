@@ -4,6 +4,7 @@ using UnityEngine;
 
 public static class StaticClass 
 {
+    private static Vector3 scale = Vector3.zero;
     public static int planeScale = 500;
     private static Vector3 direction = Vector3.zero;
     public static Plan plan;
@@ -16,9 +17,10 @@ public static class StaticClass
     private static float wallMultiplierZ = 0.001f;
 
     //temp window length
-    
-
-    public static int createMode = 0;//0 - create, 1 - delete
+    public static int windowLength;
+    public static int doorLength;
+    //public static int objectTypeMode = 0;
+    //public static int createMode = 0;//0 - create, 1 - delete
     public static void SetCurrentPlan(Plan currentPlan)
     {
         plan = currentPlan;
@@ -63,22 +65,22 @@ public static class StaticClass
         {
             if (point.x > wallVertices[3].x)
             {
-                wallVertices[3].x+=GridScaler.scaleValue;
-                wallVertices[2].x += GridScaler.scaleValue;
-                colliderSize.x += GridScaler.scaleValue;
-                colliderCenter.x += GridScaler.scaleValue / 2;
-                uvs[3].x += GridScaler.scaleValue / (wallVertices[2].y - wallVertices[3].y);
-                uvs[2].x += GridScaler.scaleValue / (wallVertices[2].y - wallVertices[3].y);
+                wallVertices[3].x+=0.01f;
+                wallVertices[2].x += 0.01f;
+                colliderSize.x += 0.01f;
+                colliderCenter.x += 0.01f / 2;
+                uvs[3].x += 0.01f / (wallVertices[2].y - wallVertices[3].y);
+                uvs[2].x += 0.01f / (wallVertices[2].y - wallVertices[3].y);
             }
 
             if (point.x < wallVertices[3].x - 0.001f)
             {
-                wallVertices[3].x -= GridScaler.scaleValue;
-                wallVertices[2].x -= GridScaler.scaleValue;
-                colliderSize.x -= GridScaler.scaleValue;
-                colliderCenter.x -= GridScaler.scaleValue / 2;
-                uvs[3].x -= GridScaler.scaleValue / (wallVertices[2].y - wallVertices[3].y);
-                uvs[2].x -= GridScaler.scaleValue / (wallVertices[2].y - wallVertices[3].y);
+                wallVertices[3].x -= 0.01f;
+                wallVertices[2].x -= 0.01f;
+                colliderSize.x -= 0.01f;
+                colliderCenter.x -= 0.01f / 2;
+                uvs[3].x -= 0.01f / (wallVertices[2].y - wallVertices[3].y);
+                uvs[2].x -= 0.01f / (wallVertices[2].y - wallVertices[3].y);
             }
         }
 
@@ -86,43 +88,43 @@ public static class StaticClass
         {
             if (point.x < wallVertices[1].x)
             {
-                wallVertices[0].x -= GridScaler.scaleValue;
-                wallVertices[1].x -= GridScaler.scaleValue;
-                colliderSize.x += GridScaler.scaleValue;
-                colliderCenter.x -= GridScaler.scaleValue / 2;
-                uvs[0].x -= GridScaler.scaleValue / (wallVertices[1].y - wallVertices[0].y);
-                uvs[1].x -= GridScaler.scaleValue / (wallVertices[1].y - wallVertices[0].y);
+                wallVertices[0].x -= 0.01f;
+                wallVertices[1].x -= 0.01f;
+                colliderSize.x += 0.01f;
+                colliderCenter.x -= 0.01f / 2;
+                uvs[0].x -= 0.01f / (wallVertices[1].y - wallVertices[0].y);
+                uvs[1].x -= 0.01f / (wallVertices[1].y - wallVertices[0].y);
             }
 
-            if (point.x > wallVertices[1].x + GridScaler.scaleValue * 0.1f)
+            if (point.x > wallVertices[1].x + 0.01f * 0.1f)
             {
-                wallVertices[0].x += GridScaler.scaleValue;
-                wallVertices[1].x += GridScaler.scaleValue;
-                colliderSize.x -= GridScaler.scaleValue;
-                colliderCenter.x += GridScaler.scaleValue / 2;
-                uvs[0].x += GridScaler.scaleValue / (wallVertices[1].y - wallVertices[0].y);
-                uvs[1].x += GridScaler.scaleValue / (wallVertices[1].y - wallVertices[0].y);
+                wallVertices[0].x += 0.01f;
+                wallVertices[1].x += 0.01f;
+                colliderSize.x -= 0.01f;
+                colliderCenter.x += 0.01f / 2;
+                uvs[0].x += 0.01f / (wallVertices[1].y - wallVertices[0].y);
+                uvs[1].x += 0.01f / (wallVertices[1].y - wallVertices[0].y);
             }
         }
         if (direction == Vector3.up)
         {
             if (point.y > wallVertices[1].y)
             {
-                wallVertices[1].y += GridScaler.scaleValue;
-                wallVertices[2].y += GridScaler.scaleValue;
-                colliderSize.y += GridScaler.scaleValue;
-                colliderCenter.y += GridScaler.scaleValue / 2;
-                uvs[1].y += GridScaler.scaleValue / (wallVertices[2].x - wallVertices[1].x);
-                uvs[2].y += GridScaler.scaleValue / (wallVertices[2].x - wallVertices[1].x);
+                wallVertices[1].y += 0.01f;
+                wallVertices[2].y += 0.01f;
+                colliderSize.y += 0.01f;
+                colliderCenter.y += 0.01f / 2;
+                uvs[1].y += 0.01f / (wallVertices[2].x - wallVertices[1].x);
+                uvs[2].y += 0.01f / (wallVertices[2].x - wallVertices[1].x);
             }
-            if (point.y < wallVertices[1].y - GridScaler.scaleValue * 0.1f)
+            if (point.y < wallVertices[1].y - 0.01f * 0.1f)
             {
-                wallVertices[1].y -= GridScaler.scaleValue;
-                wallVertices[2].y -= GridScaler.scaleValue;
-                colliderSize.y -= GridScaler.scaleValue;
-                colliderCenter.y -= GridScaler.scaleValue / 2;
-                uvs[1].y -= GridScaler.scaleValue / (wallVertices[2].x - wallVertices[1].x);
-                uvs[2].y -= GridScaler.scaleValue / (wallVertices[2].x - wallVertices[1].x);
+                wallVertices[1].y -= 0.01f;
+                wallVertices[2].y -= 0.01f;
+                colliderSize.y -= 0.01f;
+                colliderCenter.y -= 0.01f / 2;
+                uvs[1].y -= 0.01f / (wallVertices[2].x - wallVertices[1].x);
+                uvs[2].y -= 0.01f / (wallVertices[2].x - wallVertices[1].x);
             }
         }
 
@@ -130,21 +132,21 @@ public static class StaticClass
         {
             if (point.y < wallVertices[0].y)
             {
-                wallVertices[0].y -= GridScaler.scaleValue;
-                wallVertices[3].y -= GridScaler.scaleValue;
-                colliderSize.y += GridScaler.scaleValue;
-                colliderCenter.y -= GridScaler.scaleValue / 2;
-                uvs[0].y += GridScaler.scaleValue / (wallVertices[0].x - wallVertices[3].x);
-                uvs[3].y += GridScaler.scaleValue / (wallVertices[0].x - wallVertices[3].x);
+                wallVertices[0].y -= 0.01f;
+                wallVertices[3].y -= 0.01f;
+                colliderSize.y += 0.01f;
+                colliderCenter.y -= 0.01f / 2;
+                uvs[0].y += 0.01f / (wallVertices[0].x - wallVertices[3].x);
+                uvs[3].y += 0.01f / (wallVertices[0].x - wallVertices[3].x);
             }
-            if (point.y > wallVertices[0].y + GridScaler.scaleValue * 0.1f)
+            if (point.y > wallVertices[0].y + 0.01f * 0.1f)
             {
-                wallVertices[0].y += GridScaler.scaleValue;
-                wallVertices[3].y += GridScaler.scaleValue;
-                colliderSize.y -= GridScaler.scaleValue;
-                colliderCenter.y += GridScaler.scaleValue / 2;
-                uvs[0].y -= GridScaler.scaleValue / (wallVertices[0].x - wallVertices[3].x);
-                uvs[3].y -= GridScaler.scaleValue / (wallVertices[0].x - wallVertices[3].x);
+                wallVertices[0].y += 0.01f;
+                wallVertices[3].y += 0.01f;
+                colliderSize.y -= 0.01f;
+                colliderCenter.y += 0.01f / 2;
+                uvs[0].y -= 0.01f / (wallVertices[0].x - wallVertices[3].x);
+                uvs[3].y -= 0.01f / (wallVertices[0].x - wallVertices[3].x);
             }
         }
 
@@ -322,5 +324,20 @@ public static class StaticClass
             Debug.LogWarning("Zero");
         }
         return direction;
+    }
+
+    public static void ChangeScaleX(int scaleX)
+    {
+        scale.x = scaleX;
+    }
+
+    public static void ChangeScaleY(int scaleY)
+    {
+        scale.y = scaleY;
+    }
+
+    public static Vector3 GetScale()
+    {
+        return scale;
     }
 }

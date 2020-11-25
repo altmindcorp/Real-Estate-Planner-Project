@@ -10,9 +10,13 @@ public class CameraController : MonoBehaviour
     public delegate void OnDistanceChanged(int change);
     public static event OnDistanceChanged onDistanceChanged;
     public Grid grid;
-
+    private TMPro.TMP_Text scaleText;
     // Start is called before the first frame update
-
+    private void Start()
+    {
+        scaleText = GameObject.Find("ScaleModeText").GetComponent<TMPro.TMP_Text>();
+        scaleText.text = "Grid Cell Scale: 1 sm";
+    }
     // Update is called once per frame
     void Update()
     {
@@ -71,18 +75,21 @@ public class CameraController : MonoBehaviour
                 onDistanceChanged?.Invoke(-1);
             }
             GridScaler.mode = 1;
+            scaleText.text = "Grid Cell Scale: 10 sm";
         }
 
         else if (GridScaler.mode != 0 && transform.position.z > distanceSM_DM)
         {
             onDistanceChanged?.Invoke(-1);
             GridScaler.mode = 0;
+            scaleText.text = "Grid Cell Scale: 1 sm";
         }
 
         else if (GridScaler.mode != 2 && transform.position.z < distanceDM_M)
         {
             onDistanceChanged?.Invoke(1);
             GridScaler.mode = 2;
+            scaleText.text = "Grid Cell Scale: 1 m";
         }
     }
 }

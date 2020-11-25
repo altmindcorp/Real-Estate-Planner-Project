@@ -7,21 +7,22 @@ using UnityEngine.EventSystems;
 public class Pointer : MonoBehaviour
 {
     
-    public TMP_Text topText;
-    public TMP_Text bottomText;
-    public TMP_Dropdown modeDropdown;//0 - add, 1 - delete, 2 - move
-    public TMP_Dropdown objectTypeDropdown;//0 - add anchor, 1- add wall, 2 - add window
-    public TMP_InputField topInputField;
-    public TMP_InputField bottomInputField;
+    //public TMP_Text topText;
+    //public TMP_Text bottomText;
+    //public TMP_Dropdown modeDropdown;//0 - add, 1 - delete, 2 - move
+    //public TMP_Dropdown objectTypeDropdown;//0 - add anchor, 1- add wall, 2 - add window
+    //public TMP_InputField topInputField;
+    //public TMP_InputField bottomInputField;
     [SerializeField]
-    private Vector3 scale;
+    //private Vector3 scale;
     public Material anchorMaterial;
     public Material wallMaterial;
     public Material windowMaterial;
     public Material doorMaterial;
 
-    public float windowLength = 4;
-    public float doorLength = 4;
+
+    //public float windowLength = 4;
+    //public float doorLength = 4;
     private RaycastHit hit;
     //private Ray ray;
     //private bool mouseHold = false;
@@ -34,10 +35,9 @@ public class Pointer : MonoBehaviour
     {
         Plan newPlan = new Plan();
         //topInputField
-        topText.text = "Anchor X length, sm: ";
-        topText.text = "Anchor Y length, sm: ";
-        modeDropdown.value = 0;
-        objectTypeDropdown.value = 0;
+        
+        //modeDropdown.value = 0;
+        //objectTypeDropdown.value = 0;
         StaticClass.SetCurrentPlan(newPlan);
     }
     Vector3 direction;
@@ -49,17 +49,19 @@ public class Pointer : MonoBehaviour
         {
             if (Physics.Raycast(camera.ScreenPointToRay(Input.mousePosition), out hit))
             {
-                if (modeDropdown.value == 0)//add
-                { 
-                    if (objectTypeDropdown.value == 0)//anchor 
+                if (UIController.createTypeMode == 0)//add
+                {
+                    Debug.Log("Type: " + UIController.objectTypeMode);
+                    if (UIController.objectTypeMode == 0)//anchor 
                     {
                         if (hit.transform.tag!="PlanObject")
                         {
-                            currentGameObject = StaticClass.CreateAnchor(GetStartPoint(hit.point), scale, anchorMaterial);
+                            currentGameObject = StaticClass.CreateAnchor(GetStartPoint(hit.point), StaticClass.GetScale(), anchorMaterial);
                         }                            
                     }
-                    else if (objectTypeDropdown.value == 1)//wall
+                    else if (UIController.objectTypeMode == 1)//wall
                     {
+                        
                         if (hit.transform.gameObject.tag == "PlanObject")
                         {
                             planObj = hit.transform.gameObject.GetComponent<PlanObject>();
@@ -69,7 +71,7 @@ public class Pointer : MonoBehaviour
                             }
                         }
                     }
-                    else if (objectTypeDropdown.value == 2)//window
+                    else if (UIController.objectTypeMode == 2)//window
                     {
                         if (hit.transform.gameObject.tag == "PlanObject")
                         {
@@ -78,7 +80,7 @@ public class Pointer : MonoBehaviour
                             if (planObj is PlanObjectSimpWall)
                             {
                                 Debug.Log("Create Window");
-                                currentGameObject = StaticClass.CreateWindow(GetStartPoint(hit.point, planObj.gameObject), GetObjectScale(planObj.gameObject), windowMaterial);
+                                currentGameObject = StaticClass.CreateWindow(GetStartPoint(hit.point, planObj.gameObject), GetWindowScale(planObj.gameObject), windowMaterial);
                             }
 
                             else if (planObj==null)
@@ -92,7 +94,7 @@ public class Pointer : MonoBehaviour
                         }
                     }
 
-                    else if (objectTypeDropdown.value == 3)
+                    else if (UIController.objectTypeMode == 3)
                     {
                         if (hit.transform.gameObject.tag == "PlanObject")
                         {
@@ -101,7 +103,7 @@ public class Pointer : MonoBehaviour
                             if (planObj is PlanObjectSimpWall)
                             {
                                 Debug.Log("Create Door");
-                                currentGameObject = StaticClass.CreateDoor(GetStartPoint(hit.point, planObj.gameObject), GetObjectScale(planObj.gameObject), doorMaterial);
+                                currentGameObject = StaticClass.CreateDoor(GetStartPoint(hit.point, planObj.gameObject), GetDoorScale(planObj.gameObject), doorMaterial);
                             }
 
                             else if (planObj == null)
@@ -116,12 +118,12 @@ public class Pointer : MonoBehaviour
                     } 
                 }
 
-                else if (modeDropdown.value == 1)//delete
+                else if (UIController.createTypeMode == 1)//delete
                 {
                     //deleteobject
                 }
 
-                else if (modeDropdown.value == 2)//move
+                else if (UIController.createTypeMode == 2)//move
                 {
                     //moveobject
                 }
@@ -146,7 +148,7 @@ public class Pointer : MonoBehaviour
                         if (wallPlanObject.GetStartPoint() != Vector3.zero)
                         {
                             //Debug.Log("Setup anchor in point: " + wallPlanObject.GetStartPoint());
-                            StaticClass.CreateAnchor(wallPlanObject.GetStartPoint(), scale, anchorMaterial);
+                            StaticClass.CreateAnchor(wallPlanObject.GetStartPoint(), StaticClass.GetScale(), anchorMaterial);
                         }
 
                         else
@@ -233,14 +235,14 @@ public class Pointer : MonoBehaviour
         if (direction == Vector3.left || direction == Vector3.right)//horizontal
         {
             Debug.Log("Direction: " + direction);
-            scale.x = windowLength;
+            scale.x = StaticClass.windowLength;
             return scale;
         }
         else if (direction == Vector3.up || direction == Vector3.down)
         {
             Debug.Log("Direction: " + direction);
             scale.x = scale.y;
-            scale.y = windowLength;
+            scale.y = StaticClass.windowLength;
 
             return scale;
         }
@@ -254,14 +256,14 @@ public class Pointer : MonoBehaviour
         if (direction == Vector3.left || direction == Vector3.right)//horizontal
         {
             Debug.Log("Direction: " + direction);
-            scale.x = windowLength;
+            scale.x = StaticClass.doorLength;
             return scale;
         }
         else if (direction == Vector3.up || direction == Vector3.down)
         {
             Debug.Log("Direction: " + direction);
             scale.x = scale.y;
-            scale.y = windowLength;
+            scale.y = StaticClass.doorLength;
 
             return scale;
         }
@@ -275,14 +277,14 @@ public class Pointer : MonoBehaviour
         if (direction == Vector3.left || direction == Vector3.right)//horizontal
         {
             Debug.Log("Direction: " + direction);
-            scale.x = windowLength;
+            scale.x = StaticClass.windowLength;
             return scale;
         }
         else if (direction == Vector3.up || direction == Vector3.down)
         {
             Debug.Log("Direction: " + direction);
             scale.x = scale.y;
-            scale.y = windowLength;
+            scale.y = StaticClass.windowLength;
 
             return scale;
         }
@@ -297,13 +299,16 @@ public class Pointer : MonoBehaviour
         }
     }
 
-    public void ChangeScaleX(TMP_InputField inputField)
+    public void GetTopInput(TMP_InputField inputField)
     {
-        scale.x = int.Parse(inputField.text);
+        //if object type == 0 => anchor scale X = input.value
+        //if 2 => window length = input.value
+        // if 3 => door length = input.value
     }
 
-    public void ChangeScaleY(TMP_InputField inputField)
+    public void GetBottomInput(TMP_InputField inputField)
     {
-        scale.y = int.Parse(inputField.text);
+        //if object type == 0 => anchor scale Y = input.value
+        //if 2 || 3 => disable input
     }
 }
