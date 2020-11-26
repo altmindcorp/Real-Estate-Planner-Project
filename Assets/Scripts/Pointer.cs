@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class Pointer : MonoBehaviour
 {
-    
+    public TMP_Text measureTextHint;
     //public TMP_Text topText;
     //public TMP_Text bottomText;
     //public TMP_Dropdown modeDropdown;//0 - add, 1 - delete, 2 - move
@@ -56,7 +56,7 @@ public class Pointer : MonoBehaviour
                     {
                         if (hit.transform.tag!="PlanObject")
                         {
-                            currentGameObject = StaticClass.CreateAnchor(GetStartPoint(hit.point), StaticClass.GetScale(), anchorMaterial);
+                            currentGameObject = StaticClass.CreateAnchor(GetStartPoint(hit.point), StaticClass.GetScale(), anchorMaterial, measureTextHint);
                         }                            
                     }
                     else if (UIController.objectTypeMode == 1)//wall
@@ -148,7 +148,7 @@ public class Pointer : MonoBehaviour
                         if (wallPlanObject.GetStartPoint() != Vector3.zero)
                         {
                             //Debug.Log("Setup anchor in point: " + wallPlanObject.GetStartPoint());
-                            StaticClass.CreateAnchor(wallPlanObject.GetStartPoint(), StaticClass.GetScale(), anchorMaterial);
+                            StaticClass.CreateAnchor(wallPlanObject.GetStartPoint(), StaticClass.GetScale(), anchorMaterial, measureTextHint);
                         }
 
                         else

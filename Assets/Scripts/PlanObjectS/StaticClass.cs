@@ -4,6 +4,7 @@ using UnityEngine;
 
 public static class StaticClass 
 {
+    
     private static Vector3 scale = Vector3.zero;
     public static int planeScale = 500;
     private static Vector3 direction = Vector3.zero;
@@ -170,12 +171,19 @@ public static class StaticClass
         return vertices;
     }*/
 
+    public static void Undo()
+    {
+        Object.Destroy(plan.planGameObjects[plan.planGameObjects.Count - 1]);
+        plan.planGameObjects.RemoveAt(plan.planGameObjects.Count - 1);
+    }
 
-
-    public static GameObject CreateAnchor(Vector3 startPoint, Vector3 scale, Material material)
+    public static GameObject CreateAnchor(Vector3 startPoint, Vector3 scale, Material material, TMPro.TMP_Text hintText)
     {
         Vector3[] vertices = GetVertices(startPoint, scale, 0);
         GameObject newGameObject = new GameObject("Anchor");
+        //TMPro.TMP_Text textObject = GameObject.Instantiate(hintText, new Vector3(startPoint.x + scale.x * GridScaler.scaleValue / 2, startPoint.y + scale.y * GridScaler.scaleValue / 2, -0.0001f), Quaternion.identity, newGameObject.transform);
+        //textObject.text = scale.ToString();
+        //textObject.transform.localScale -= new Vector3(1 - GridScaler.scaleValue * 0.2f, 1 - GridScaler.scaleValue * 0.2f);
         PlanObjectAnchor anchorPlanObject = newGameObject.AddComponent<PlanObjectAnchor>();
         SetMesh(newGameObject, vertices, material);
         anchorPlanObject.SetTag("PlanObject");
