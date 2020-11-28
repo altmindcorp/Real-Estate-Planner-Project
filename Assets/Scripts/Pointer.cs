@@ -67,7 +67,7 @@ public class Pointer : MonoBehaviour
                             planObj = hit.transform.gameObject.GetComponent<PlanObject>();
                             if (planObj is PlanObjectAnchor)
                             {
-                                currentGameObject = StaticClass.CreateSimpWall(planObj.GetVertices()[0], planObj.GetScale(), wallMaterial);
+                                currentGameObject = StaticClass.CreateSimpWall(planObj.GetVertices()[0], planObj.GetScale(), wallMaterial, measureTextHint);
                             }
                         }
                     }

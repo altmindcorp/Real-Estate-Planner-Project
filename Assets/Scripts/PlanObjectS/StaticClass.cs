@@ -57,6 +57,7 @@ public static class StaticClass
 
     public static void UpdateSimpWall(GameObject planObjectWall, Vector3 point, Vector3 direction)
     {
+        TMPro.TMP_Text hintText = planObjectWall.GetComponentInChildren<TMPro.TMP_Text>();
         Vector3[] wallVertices = planObjectWall.GetComponent<MeshFilter>().mesh.vertices;
         Vector2[] uvs = planObjectWall.GetComponent<MeshFilter>().mesh.uv;
         var colliderSize = planObjectWall.GetComponent<BoxCollider>().size;
@@ -66,6 +67,8 @@ public static class StaticClass
         {
             if (point.x > wallVertices[3].x)
             {
+                hintText.transform.Translate(Vector3.right* 0.01f / 2);
+                hintText.text = ((wallVertices[3]-wallVertices[0])*100).ToString();
                 wallVertices[3].x+=0.01f;
                 wallVertices[2].x += 0.01f;
                 colliderSize.x += 0.01f;
@@ -76,6 +79,8 @@ public static class StaticClass
 
             if (point.x < wallVertices[3].x - 0.001f)
             {
+                hintText.transform.Translate(Vector3.left * 0.01f / 2);
+                hintText.text = ((wallVertices[3] - wallVertices[0]) * 100).ToString();
                 wallVertices[3].x -= 0.01f;
                 wallVertices[2].x -= 0.01f;
                 colliderSize.x -= 0.01f;
@@ -89,6 +94,8 @@ public static class StaticClass
         {
             if (point.x < wallVertices[1].x)
             {
+                hintText.transform.Translate(Vector3.left * 0.01f / 2);
+                hintText.text = ((wallVertices[3] - wallVertices[0]) * 100).ToString();
                 wallVertices[0].x -= 0.01f;
                 wallVertices[1].x -= 0.01f;
                 colliderSize.x += 0.01f;
@@ -99,6 +106,8 @@ public static class StaticClass
 
             if (point.x > wallVertices[1].x + 0.01f * 0.1f)
             {
+                hintText.transform.Translate(Vector3.right * 0.01f / 2);
+                hintText.text = ((wallVertices[3] - wallVertices[0]) * 100).ToString();
                 wallVertices[0].x += 0.01f;
                 wallVertices[1].x += 0.01f;
                 colliderSize.x -= 0.01f;
@@ -111,15 +120,19 @@ public static class StaticClass
         {
             if (point.y > wallVertices[1].y)
             {
+                hintText.transform.Translate(Vector3.up * 0.01f / 2);
+                hintText.text = ((wallVertices[1] - wallVertices[0]) * 100).ToString();
                 wallVertices[1].y += 0.01f;
                 wallVertices[2].y += 0.01f;
                 colliderSize.y += 0.01f;
-                colliderCenter.y += 0.01f / 2;
+                colliderCenter.y += 0.01f / 2; 
                 uvs[1].y += 0.01f / (wallVertices[2].x - wallVertices[1].x);
                 uvs[2].y += 0.01f / (wallVertices[2].x - wallVertices[1].x);
             }
             if (point.y < wallVertices[1].y - 0.01f * 0.1f)
             {
+                hintText.transform.Translate(Vector3.down * 0.01f / 2);
+                hintText.text = ((wallVertices[1] - wallVertices[0]) * 100).ToString();
                 wallVertices[1].y -= 0.01f;
                 wallVertices[2].y -= 0.01f;
                 colliderSize.y -= 0.01f;
@@ -133,6 +146,8 @@ public static class StaticClass
         {
             if (point.y < wallVertices[0].y)
             {
+                hintText.transform.Translate(Vector3.down * 0.01f / 2);
+                hintText.text = ((wallVertices[1] - wallVertices[0]) * 100).ToString();
                 wallVertices[0].y -= 0.01f;
                 wallVertices[3].y -= 0.01f;
                 colliderSize.y += 0.01f;
@@ -142,6 +157,8 @@ public static class StaticClass
             }
             if (point.y > wallVertices[0].y + 0.01f * 0.1f)
             {
+                hintText.transform.Translate(Vector3.up * 0.01f / 2);
+                hintText.text = ((wallVertices[1] - wallVertices[0]) * 100).ToString();
                 wallVertices[0].y += 0.01f;
                 wallVertices[3].y += 0.01f;
                 colliderSize.y -= 0.01f;
@@ -181,9 +198,9 @@ public static class StaticClass
     {
         Vector3[] vertices = GetVertices(startPoint, scale, 0);
         GameObject newGameObject = new GameObject("Anchor");
-        //TMPro.TMP_Text textObject = GameObject.Instantiate(hintText, new Vector3(startPoint.x + scale.x * GridScaler.scaleValue / 2, startPoint.y + scale.y * GridScaler.scaleValue / 2, -0.0001f), Quaternion.identity, newGameObject.transform);
-        //textObject.text = scale.ToString();
-        //textObject.transform.localScale -= new Vector3(1 - GridScaler.scaleValue * 0.2f, 1 - GridScaler.scaleValue * 0.2f);
+        TMPro.TMP_Text textObject = GameObject.Instantiate(hintText, new Vector3(startPoint.x + scale.x * GridScaler.scaleValue / 2, startPoint.y + scale.y * GridScaler.scaleValue / 2, -0.0001f), Quaternion.identity, newGameObject.transform);
+        textObject.text = scale.ToString();
+        textObject.transform.localScale -= new Vector3(1 - GridScaler.scaleValue * 0.2f, 1 - GridScaler.scaleValue * 0.2f);
         PlanObjectAnchor anchorPlanObject = newGameObject.AddComponent<PlanObjectAnchor>();
         SetMesh(newGameObject, vertices, material);
         anchorPlanObject.SetTag("PlanObject");
@@ -196,10 +213,13 @@ public static class StaticClass
         return plan.planGameObjects[plan.planGameObjects.Count - 1];
     }
 
-    public static GameObject CreateSimpWall(Vector3 startPoint, Vector3 scale, Material material)
+    public static GameObject CreateSimpWall(Vector3 startPoint, Vector3 scale, Material material, TMPro.TMP_Text hintText)
     {
         Vector3[] vertices = GetVertices(startPoint, scale, 0);
         GameObject newGameObject = new GameObject("Simple Wall");
+        TMPro.TMP_Text textObject = GameObject.Instantiate(hintText, new Vector3(startPoint.x + scale.x * GridScaler.scaleValue / 2, startPoint.y + scale.y * GridScaler.scaleValue / 2, -0.0001f), Quaternion.identity, newGameObject.transform);
+        textObject.text = scale.ToString();
+        textObject.transform.localScale -= new Vector3(1 - GridScaler.scaleValue * 0.2f, 1 - GridScaler.scaleValue * 0.2f);
         PlanObjectSimpWall planObjectSimpWall = newGameObject.AddComponent<PlanObjectSimpWall>();
         SetMesh(newGameObject, vertices, material);
         planObjectSimpWall.SetTag("PlanObject");
