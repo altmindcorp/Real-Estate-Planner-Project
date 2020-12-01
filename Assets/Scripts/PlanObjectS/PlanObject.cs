@@ -5,7 +5,7 @@ using System.Linq;
 
 public class PlanObject : MonoBehaviour
 {
-    
+
     protected Vector3[] coords = new Vector3[4];
     private int id;
     protected Vector3 scale;

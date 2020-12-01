@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 public static class GridScaler
@@ -11,19 +12,19 @@ public static class GridScaler
     {
         if (mode == 0)
         {
-            
+
             scaleValue = 0.01f;
         }
 
         else if (mode == 1)
         {
-            
+
             scaleValue = 0.1f;
         }
 
         else if (mode == 2)
         {
-            
+
             scaleValue = 1;
         }
     }

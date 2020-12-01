@@ -31,7 +31,7 @@ public class UIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void ChangeObjectType(TMP_Dropdown dropdown)
@@ -50,7 +50,7 @@ public class UIController : MonoBehaviour
             bottomInputField.text = StaticClass.GetScale().y.ToString();
         }
 
-        else if (dropdown.value == 2 )
+        else if (dropdown.value == 2)
         {
             topText.text = "Window Length, sm: ";
             topInputField.placeholder.GetComponent<TMP_Text>().text = StaticClass.windowLength.ToString();

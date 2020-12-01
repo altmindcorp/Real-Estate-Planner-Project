@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 public class PlanObjectWindow : PlanObject
-{ 
+{
     private float bottomHeight; //in sm
     private float topHeight;
     private Vector3 orientation;

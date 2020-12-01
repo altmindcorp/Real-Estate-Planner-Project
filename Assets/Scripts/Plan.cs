@@ -8,10 +8,10 @@ public class Plan
     public List<GameObject> planGameObjects = new List<GameObject>();
     public int currentID;
     //public List<PlanObject> planObjects = new List<PlanObject>();
-    
 
-    
-    
+
+
+
 
     public void RemoveObjectWithID(int id)
     {
@@ -20,6 +20,6 @@ public class Plan
 
     public GameObject GetLastPlanObject()
     {
-        return planGameObjects[planGameObjects.Count-1];
+        return planGameObjects[planGameObjects.Count - 1];
     }
 }

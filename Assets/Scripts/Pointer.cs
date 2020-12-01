@@ -35,7 +35,7 @@ public class Pointer : MonoBehaviour
     {
         Plan newPlan = new Plan();
         //topInputField
-        
+
         //modeDropdown.value = 0;
         //objectTypeDropdown.value = 0;
         StaticClass.SetCurrentPlan(newPlan);
@@ -54,14 +54,14 @@ public class Pointer : MonoBehaviour
                     Debug.Log("Type: " + UIController.objectTypeMode);
                     if (UIController.objectTypeMode == 0)//anchor 
                     {
-                        if (hit.transform.tag!="PlanObject")
+                        if (hit.transform.tag != "PlanObject")
                         {
                             currentGameObject = StaticClass.CreateAnchor(GetStartPoint(hit.point), StaticClass.GetScale(), anchorMaterial, measureTextHint);
-                        }                            
+                        }
                     }
                     else if (UIController.objectTypeMode == 1)//wall
                     {
-                        
+
                         if (hit.transform.gameObject.tag == "PlanObject")
                         {
                             planObj = hit.transform.gameObject.GetComponent<PlanObject>();
@@ -76,14 +76,14 @@ public class Pointer : MonoBehaviour
                         if (hit.transform.gameObject.tag == "PlanObject")
                         {
                             planObj = hit.transform.gameObject.GetComponent<PlanObject>();
-                            
+
                             if (planObj is PlanObjectSimpWall)
                             {
                                 Debug.Log("Create Window");
                                 currentGameObject = StaticClass.CreateWindow(GetStartPoint(hit.point, planObj.gameObject), GetWindowScale(planObj.gameObject), windowMaterial);
                             }
 
-                            else if (planObj==null)
+                            else if (planObj == null)
                             {
                                 Debug.Log("PlanObj is null");
                             }
@@ -112,10 +112,10 @@ public class Pointer : MonoBehaviour
                             }
                         }
                     }
-                    if (planObj!=null)
+                    if (planObj != null)
                     {
                         objectVertices = planObj.GetMesh().vertices;
-                    } 
+                    }
                 }
 
                 else if (UIController.createTypeMode == 1)//delete
@@ -142,7 +142,7 @@ public class Pointer : MonoBehaviour
                     }
                     else
                     {
-                        
+
                         var wallPlanObject = currentGameObject.GetComponent<PlanObjectSimpWall>();
                         //Debug.Log("Wall OBj Direction: " + wallPlanObject.GetDirection());
                         if (wallPlanObject.GetStartPoint() != Vector3.zero)
@@ -157,7 +157,7 @@ public class Pointer : MonoBehaviour
                         }
                     }
                 }
-                
+
             }
             currentGameObject = null;
             planObj = null;
@@ -177,10 +177,10 @@ public class Pointer : MonoBehaviour
                             StaticClass.UpdateSimpWall(currentGameObject, hit.point, direction);
                         }
                     }
-                    
+
                 }
             }
-        }     
+        }
     }
 
     Vector3 GetStartPoint(Vector3 hitPoint)
@@ -191,7 +191,7 @@ public class Pointer : MonoBehaviour
             var newCoords = new Vector3((int)(hit.point.x / 0.01f) * 0.01f, (int)(hit.point.y / 0.01f) * 0.01f, hit.point.z);
             Debug.Log("New Coords: " + newCoords.x.ToString("F5") + " " + newCoords.y.ToString("F5"));
             return newCoords;
-            
+
         }
 
         else if (GridScaler.mode == 1)
@@ -218,7 +218,7 @@ public class Pointer : MonoBehaviour
         Vector3 startPoint = GetStartPoint(hitPoint);
         if (direction == Vector3.left || direction == Vector3.right)
         {
-            
+
             return new Vector3(startPoint.x, planObj.GetVertices()[0].y, 0);
         }
         else if (direction == Vector3.up || direction == Vector3.down)
@@ -293,7 +293,7 @@ public class Pointer : MonoBehaviour
 
     void ChangeText(int value)
     {
-        if (value==0)
+        if (value == 0)
         {
 
         }

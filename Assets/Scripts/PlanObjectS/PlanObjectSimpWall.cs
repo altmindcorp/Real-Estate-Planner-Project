@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 public class PlanObjectSimpWall : PlanObject
@@ -15,7 +16,7 @@ public class PlanObjectSimpWall : PlanObject
 
     public void SetDirection(Vector3 direction)
     {
-        
+
         this.direction = direction;
     }
 
@@ -29,7 +30,7 @@ public class PlanObjectSimpWall : PlanObject
         Vector3[] vertices = GetVertices();
         if (direction == Vector3.right && vertices[2].x >= vertices[1].x + scale.x * 2 * 0.01f)
         {
-            startPoint.x = vertices[3].x - scale.x * 0.01f;;
+            startPoint.x = vertices[3].x - scale.x * 0.01f; ;
             startPoint.y = vertices[3].y;
             startPoint.z = vertices[3].z - 0.001f;
             //Debug.Log("StartPoint: " + startPoint + ", vertices[1]" + vertices[1] + ", scale: " + scale + ", direction: " + direction);

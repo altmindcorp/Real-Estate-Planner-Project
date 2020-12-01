@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -20,12 +21,12 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.mouseScrollDelta.y>0 && transform.position.z < -0.15f)
+        if (Input.mouseScrollDelta.y > 0 && transform.position.z < -0.15f)
         {
             transform.Translate(Vector3.forward * cameraChange * GridScaler.scaleValue);
         }
 
-        if (Input.mouseScrollDelta.y<0)
+        if (Input.mouseScrollDelta.y < 0)
         {
             transform.Translate(Vector3.back * cameraChange * GridScaler.scaleValue);
         }

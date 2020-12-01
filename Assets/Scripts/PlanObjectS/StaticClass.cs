@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
-public static class StaticClass 
+public static class StaticClass
 {
-    
+
     private static Vector3 scale = Vector3.zero;
     public static int planeScale = 500;
     private static Vector3 direction = Vector3.zero;
@@ -51,9 +52,9 @@ public static class StaticClass
         }
     }
 
-    
 
-    
+
+
 
     public static void UpdateSimpWall(GameObject planObjectWall, Vector3 point, Vector3 direction)
     {
@@ -67,9 +68,9 @@ public static class StaticClass
         {
             if (point.x > wallVertices[3].x)
             {
-                hintText.transform.Translate(Vector3.right* 0.01f / 2);
-                hintText.text = ((wallVertices[3]-wallVertices[0])*100).ToString();
-                wallVertices[3].x+=0.01f;
+                hintText.transform.Translate(Vector3.right * 0.01f / 2);
+                hintText.text = ((wallVertices[3] - wallVertices[0]) * 100).ToString();
+                wallVertices[3].x += 0.01f;
                 wallVertices[2].x += 0.01f;
                 colliderSize.x += 0.01f;
                 colliderCenter.x += 0.01f / 2;
@@ -125,7 +126,7 @@ public static class StaticClass
                 wallVertices[1].y += 0.01f;
                 wallVertices[2].y += 0.01f;
                 colliderSize.y += 0.01f;
-                colliderCenter.y += 0.01f / 2; 
+                colliderCenter.y += 0.01f / 2;
                 uvs[1].y += 0.01f / (wallVertices[2].x - wallVertices[1].x);
                 uvs[2].y += 0.01f / (wallVertices[2].x - wallVertices[1].x);
             }
@@ -315,7 +316,7 @@ public static class StaticClass
     private static void SetMesh(GameObject obj, Vector3[] vertices, Material material)
     {
         Mesh mesh = SetMeshAttributes(vertices);
-        
+
         obj.AddComponent<MeshFilter>().mesh = mesh;
         obj.AddComponent<MeshRenderer>().material = material;
         obj.AddComponent<BoxCollider>();
