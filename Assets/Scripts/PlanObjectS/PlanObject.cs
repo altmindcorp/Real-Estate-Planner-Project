@@ -6,9 +6,14 @@ using System.Linq;
 public class PlanObject : MonoBehaviour
 {
 
-    protected Vector3[] coords = new Vector3[4];
+    public Vector3[] vertices = new Vector3[4];
     private int id;
     protected Vector3 scale;
+
+    public void SetVertices()
+    {
+        vertices = GetComponent<MeshFilter>().mesh.vertices;
+    }
 
     public Mesh GetMesh()
     {
@@ -40,8 +45,8 @@ public class PlanObject : MonoBehaviour
         this.scale = scale;
     }
 
-    public Vector3[] GetVertices()
+    /*public Vector3[] GetVertices()
     {
         return GetComponent<MeshFilter>().mesh.vertices;
-    }
+    }*/
 }

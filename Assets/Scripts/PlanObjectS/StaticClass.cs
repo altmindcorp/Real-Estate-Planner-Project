@@ -6,6 +6,8 @@ using UnityEngine;
 public static class StaticClass
 {
 
+    
+    
     private static Vector3 scale = Vector3.zero;
     public static int planeScale = 500;
     private static Vector3 direction = Vector3.zero;
@@ -169,8 +171,9 @@ public static class StaticClass
             }
         }
 
-        planObjectWall.GetComponent<PlanObjectSimpWall>().SetDirection(direction);
+        planObjectWall.GetComponent<PlanObjectSimpWall>().direction = direction;
         planObjectWall.GetComponent<PlanObjectSimpWall>().SetStartPoint();
+        planObjectWall.GetComponent<PlanObjectSimpWall>().vertices = wallVertices;
         mesh.vertices = wallVertices;
         mesh.uv = uvs;
         planObjectWall.GetComponent<MeshFilter>().mesh = mesh;
@@ -207,6 +210,7 @@ public static class StaticClass
         anchorPlanObject.SetTag("PlanObject");
         anchorPlanObject.SetID(plan.currentID);
         anchorPlanObject.SetScale(scale);
+        anchorPlanObject.SetVertices();
         newGameObject.transform.Translate(Vector3.back * anchorMultiplierZ);
         plan.planGameObjects.Add(newGameObject);
         Debug.Log("Create Anchor");
@@ -226,6 +230,8 @@ public static class StaticClass
         planObjectSimpWall.SetTag("PlanObject");
         planObjectSimpWall.SetID(plan.currentID);
         planObjectSimpWall.SetScale(scale);
+        planObjectSimpWall.SetVertices();
+        
         newGameObject.transform.Translate(Vector3.back * wallMultiplierZ);
         //currentPlanObject.SetDirection(direction);
         plan.planGameObjects.Add(newGameObject);
@@ -268,6 +274,8 @@ public static class StaticClass
         SetMesh(newGameObject, vertices, material);
         var planObjectWindow = newGameObject.AddComponent<PlanObjectWindow>();
         planObjectWindow.SetTag("PlanObject");
+        planObjectWindow.SetID(plan.currentID);
+        planObjectWindow.SetVertices();
         newGameObject.transform.Translate(Vector3.back * anchorMultiplierZ);
         plan.planGameObjects.Add(newGameObject);
         plan.currentID++;
@@ -280,8 +288,10 @@ public static class StaticClass
         GameObject newGameObject = new GameObject("Door");
         Vector3[] vertices = GetVertices(startPoint, scale, 0);
         SetMesh(newGameObject, vertices, material);
-        var planObjectWindow = newGameObject.AddComponent<PlanObjectDoor>();
-        planObjectWindow.SetTag("PlanObject");
+        var planObjectDoor = newGameObject.AddComponent<PlanObjectDoor>();
+        planObjectDoor.SetTag("PlanObject");
+        planObjectDoor.SetID(plan.currentID);
+        planObjectDoor.SetVertices();
         newGameObject.transform.Translate(Vector3.back * anchorMultiplierZ);
         plan.planGameObjects.Add(newGameObject);
         plan.currentID++;

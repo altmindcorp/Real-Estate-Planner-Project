@@ -3,13 +3,8 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class PlanObjectDoor : PlanObject
+public class PlanObjectDoor : PlanObjectObject
 {
-    private float topHeight;
-    private Vector3 orientation;
+    public float topHeight;
 
-    public float GetTopHeight()
-    {
-        return topHeight;
-    }
 }

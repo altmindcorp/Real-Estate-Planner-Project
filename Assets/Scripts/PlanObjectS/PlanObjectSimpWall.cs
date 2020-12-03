@@ -5,29 +5,15 @@ using UnityEngine;
 
 public class PlanObjectSimpWall : PlanObject
 {
-    private float height;
-    private Vector3 direction;
+    public float height;
+    public Vector3 direction;
     private Vector3 startPoint = Vector3.zero;
 
-    public float GetHeight()
-    {
-        return height;
-    }
-
-    public void SetDirection(Vector3 direction)
-    {
-
-        this.direction = direction;
-    }
-
-    public Vector3 GetDirection()
-    {
-        return direction;
-    }
+    public List<PlanObjectObject> planObjectObjectsList = new List<PlanObjectObject>();
 
     public void SetStartPoint()
     {
-        Vector3[] vertices = GetVertices();
+        
         if (direction == Vector3.right && vertices[2].x >= vertices[1].x + scale.x * 2 * 0.01f)
         {
             startPoint.x = vertices[3].x - scale.x * 0.01f; ;

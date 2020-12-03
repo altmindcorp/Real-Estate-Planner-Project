@@ -67,7 +67,7 @@ public class Pointer : MonoBehaviour
                             planObj = hit.transform.gameObject.GetComponent<PlanObject>();
                             if (planObj is PlanObjectAnchor)
                             {
-                                currentGameObject = StaticClass.CreateSimpWall(planObj.GetVertices()[0], planObj.GetScale(), wallMaterial, measureTextHint);
+                                currentGameObject = StaticClass.CreateSimpWall(planObj.vertices[0], planObj.GetScale(), wallMaterial, measureTextHint);
                             }
                         }
                     }
@@ -81,6 +81,7 @@ public class Pointer : MonoBehaviour
                             {
                                 Debug.Log("Create Window");
                                 currentGameObject = StaticClass.CreateWindow(GetStartPoint(hit.point, planObj.gameObject), GetWindowScale(planObj.gameObject), windowMaterial);
+                                planObj.GetComponent<PlanObjectSimpWall>().planObjectObjectsList.Add(currentGameObject.GetComponent<PlanObjectWindow>());
                             }
 
                             else if (planObj == null)
@@ -104,6 +105,7 @@ public class Pointer : MonoBehaviour
                             {
                                 Debug.Log("Create Door");
                                 currentGameObject = StaticClass.CreateDoor(GetStartPoint(hit.point, planObj.gameObject), GetDoorScale(planObj.gameObject), doorMaterial);
+                                planObj.GetComponent<PlanObjectSimpWall>().planObjectObjectsList.Add(currentGameObject.GetComponent<PlanObjectDoor>());
                             }
 
                             else if (planObj == null)
@@ -153,7 +155,7 @@ public class Pointer : MonoBehaviour
 
                         else
                         {
-                            //Debug.Log("No Start Point");
+                            Debug.LogError("No Start Point");
                         }
                     }
                 }
@@ -214,23 +216,23 @@ public class Pointer : MonoBehaviour
     Vector3 GetStartPoint(Vector3 hitPoint, GameObject simpWall)
     {
         PlanObjectSimpWall planObj = simpWall.GetComponent<PlanObjectSimpWall>();
-        Vector3 direction = planObj.GetDirection();
+        Vector3 direction = planObj.direction;
         Vector3 startPoint = GetStartPoint(hitPoint);
         if (direction == Vector3.left || direction == Vector3.right)
         {
 
-            return new Vector3(startPoint.x, planObj.GetVertices()[0].y, 0);
+            return new Vector3(startPoint.x, planObj.vertices[0].y, 0);
         }
         else if (direction == Vector3.up || direction == Vector3.down)
         {
-            return new Vector3(planObj.GetVertices()[0].x, startPoint.y, 0);
+            return new Vector3(planObj.vertices[0].x, startPoint.y, 0);
         }
         else return Vector3.zero;
     }
 
     Vector3 GetObjectScale(GameObject simpWall)
     {
-        Vector3 direction = simpWall.GetComponent<PlanObjectSimpWall>().GetDirection();
+        Vector3 direction = simpWall.GetComponent<PlanObjectSimpWall>().direction;
         Vector3 scale = simpWall.GetComponent<PlanObjectSimpWall>().GetScale();
         if (direction == Vector3.left || direction == Vector3.right)//horizontal
         {
@@ -251,7 +253,7 @@ public class Pointer : MonoBehaviour
 
     Vector3 GetDoorScale(GameObject simpWall)
     {
-        Vector3 direction = simpWall.GetComponent<PlanObjectSimpWall>().GetDirection();
+        Vector3 direction = simpWall.GetComponent<PlanObjectSimpWall>().direction;
         Vector3 scale = simpWall.GetComponent<PlanObjectSimpWall>().GetScale();
         if (direction == Vector3.left || direction == Vector3.right)//horizontal
         {
@@ -272,7 +274,7 @@ public class Pointer : MonoBehaviour
 
     Vector3 GetWindowScale(GameObject simpWall)
     {
-        Vector3 direction = simpWall.GetComponent<PlanObjectSimpWall>().GetDirection();
+        Vector3 direction = simpWall.GetComponent<PlanObjectSimpWall>().direction;
         Vector3 scale = simpWall.GetComponent<PlanObjectSimpWall>().GetScale();
         if (direction == Vector3.left || direction == Vector3.right)//horizontal
         {

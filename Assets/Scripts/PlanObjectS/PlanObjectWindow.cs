@@ -3,29 +3,9 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class PlanObjectWindow : PlanObject
+public class PlanObjectWindow : PlanObjectObject
 {
-    private float bottomHeight; //in sm
-    private float topHeight;
-    private Vector3 orientation;
+    public float bottomHeight; //in sm
+    public float topHeight;
 
-    public float GetBottomHeight()
-    {
-        return bottomHeight;
-    }
-
-    public float GetTopHeight()
-    {
-        return topHeight;
-    }
-
-    public Vector3 GetOrientation()
-    {
-        return orientation;
-    }
-
-    public void SetOrientation(Vector3 orientation)
-    {
-        this.orientation = orientation;
-    }
 }
