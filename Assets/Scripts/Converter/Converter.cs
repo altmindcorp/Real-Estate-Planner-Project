@@ -7,6 +7,7 @@ public class Converter : MonoBehaviour
 {
     public Material wallMaterial;
     public Material windowMaterial;
+    public Material floorMaterial;
 
     private static float doorHeight = 2.4f;
     private static float wallHeight = 2.75f;
@@ -33,6 +34,11 @@ public class Converter : MonoBehaviour
                 CreateSimpleWall(wallObject);
                 
             }
+        }
+
+        foreach (Floor floorObject in ConvertObjectTo3D.floorObjectsList)
+        {
+            CreateFloor(floorObject);
         }
     }
 
@@ -148,11 +154,19 @@ public class Converter : MonoBehaviour
         GameObject newGameObject = new GameObject(name);
         newGameObject.AddComponent<MeshFilter>().mesh = mesh;
         newGameObject.AddComponent<MeshRenderer>().material = material;
+        newGameObject.AddComponent<MeshCollider>().sharedMesh = mesh;
+        
     }
     private void CreateSimpleWall(PlanObjectSimpWall planObjWall)
     {
         CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(planObjWall.vertices, wallHeight), wallMaterial, "Not Divided Simple Wall");
         
+    }
+
+    private void CreateFloor(Floor floorObject)
+    {
+        CreateGameObject(ConvertObjectTo3D.CreateFloorGameObject(floorObject.meshFilter.mesh), floorMaterial, "Floor");
+        Destroy(floorObject);
     }
     private void SpawnPlane()
     {

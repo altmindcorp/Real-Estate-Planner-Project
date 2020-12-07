@@ -2691,6 +2691,11 @@ MonoBehaviour:
   wallMaterial: {fileID: 2100000, guid: 33d693b3c179f6744bf4818f46659c8f, type: 2}
   windowMaterial: {fileID: 2100000, guid: 8464ddb20b5040d45b58e58d7b532620, type: 2}
   doorMaterial: {fileID: 2100000, guid: b8141266207b47b43b1c8af359abf4d3, type: 2}
+  floorMaterial: {fileID: 2100000, guid: 653d1ae046af6d7459fe949a6146e31a, type: 2}
+  floorPrefab: {fileID: 5119730487654573465, guid: 600f6163eed66d247933c0196d469800,
+    type: 3}
+  spawnPrefab: {fileID: 7730695280816272430, guid: ba2a8dfd6ee387e4db9a904a105adb83,
+    type: 3}
   camera: {fileID: 963194227}
 --- !u!114 &963194231
 MonoBehaviour:
@@ -3373,6 +3378,10 @@ MonoBehaviour:
     - m_Text: Add Window
       m_Image: {fileID: 0}
     - m_Text: Add Door
+      m_Image: {fileID: 0}
+    - m_Text: Add Floor
+      m_Image: {fileID: 0}
+    - m_Text: Add Spawn Point
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:

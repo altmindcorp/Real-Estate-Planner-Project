@@ -152,6 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallMaterial: {fileID: 2100000, guid: 33d693b3c179f6744bf4818f46659c8f, type: 2}
   windowMaterial: {fileID: 2100000, guid: 4a114631ebb098643a620c3bfe0cc3f5, type: 2}
+  floorMaterial: {fileID: 2100000, guid: 653d1ae046af6d7459fe949a6146e31a, type: 2}
 --- !u!4 &17770480
 Transform:
   m_ObjectHideFlags: 0

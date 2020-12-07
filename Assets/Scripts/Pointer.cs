@@ -19,8 +19,9 @@ public class Pointer : MonoBehaviour
     public Material wallMaterial;
     public Material windowMaterial;
     public Material doorMaterial;
-
-
+    public Material floorMaterial;
+    public Floor floorPrefab;
+    public GameObject spawnPrefab;
     //public float windowLength = 4;
     //public float doorLength = 4;
     private RaycastHit hit;
@@ -29,6 +30,7 @@ public class Pointer : MonoBehaviour
 
     GameObject currentGameObject;
     private PlanObject planObj;
+    private Floor floorObj;
     public Camera camera;
     // Start is called before the first frame update
     void Start()
@@ -114,6 +116,37 @@ public class Pointer : MonoBehaviour
                             }
                         }
                     }
+
+                    else if (UIController.objectTypeMode == 4)//floor
+                    {
+                        if (hit.transform.gameObject.tag != "PlanObject")
+                        {
+                            if (hit.transform.gameObject.tag == "Floor")
+                            {
+                                Debug.Log(hit.transform.gameObject.tag);
+                                currentGameObject = hit.transform.gameObject;
+                                floorObj = currentGameObject.GetComponent<Floor>();
+                            }
+                            else
+                            {
+                                Debug.Log(hit.transform.gameObject.tag);
+                                //create floor
+                                //FloorParams floorParams = new
+                                var newFloor = Instantiate(floorPrefab.gameObject).GetComponent<Floor>();
+                                newFloor.SetFloor(hit.point, floorMaterial);
+                                floorObj = newFloor;
+                            }
+                        }
+                    }
+
+                    else if (UIController.objectTypeMode == 5)//spawn point
+                    {
+                        if (hit.transform.gameObject.tag == "Finish")
+                        {
+                            Instantiate(spawnPrefab, hit.point, Quaternion.Euler(Vector3.left*90));
+                        }
+                    }
+
                     if (planObj != null)
                     {
                         objectVertices = planObj.GetMesh().vertices;
@@ -163,6 +196,7 @@ public class Pointer : MonoBehaviour
             }
             currentGameObject = null;
             planObj = null;
+            floorObj = null;
         }
 
         if (Input.GetMouseButton(0))
@@ -178,6 +212,11 @@ public class Pointer : MonoBehaviour
                         {
                             StaticClass.UpdateSimpWall(currentGameObject, hit.point, direction);
                         }
+                    }
+                    else if (floorObj != null)
+                    {
+                        Debug.Log("Updating Floor");
+                        floorObj.UpdateFloor(0, hit.point);
                     }
 
                 }

@@ -5,8 +5,10 @@ using UnityEngine;
 public static class ConvertObjectTo3D
 {
     public static PlanObject planObject;
+    public static Floor floorObject;
     public static List<PlanObjectWindow> planObjectWindowsList = new List<PlanObjectWindow>();
     public static List<PlanObjectSimpWall> planObjectSimpWallList = new List<PlanObjectSimpWall>();
+    public static List<Floor> floorObjectsList = new List<Floor>();
     //public static List<Vector3[]> wallVerticesList = new List<Vector3[]>();
     //public static List<Vector3[]> windowVerticesList = new List<Vector3[]>();
 
@@ -14,10 +16,19 @@ public static class ConvertObjectTo3D
     {
         foreach (GameObject planGameObject in StaticClass.plan.planGameObjects)
         {
-            planObject = planGameObject.GetComponent<PlanObject>();
-            if (planObject is PlanObjectSimpWall)
+            if (planGameObject.GetComponent<PlanObject>()!= null)
             {
-                planObjectSimpWallList.Add(planObject as PlanObjectSimpWall);
+                planObject = planGameObject.GetComponent<PlanObject>();
+                if (planObject is PlanObjectSimpWall)
+                {
+                    planObjectSimpWallList.Add(planObject as PlanObjectSimpWall);
+                }
+            }
+
+            else if (planGameObject.GetComponent<Floor>() != null)
+            {
+                floorObject = planGameObject.GetComponent<Floor>();
+                floorObjectsList.Add(floorObject);
             }
         }
     }
@@ -37,6 +48,18 @@ public static class ConvertObjectTo3D
         }
 
     }*/
+
+    public static Mesh CreateFloorGameObject(Mesh mesh)
+    {
+        Vector3[] changedVertices = ChangeDimension(mesh.vertices);
+        Mesh newMesh = new Mesh();
+        newMesh.vertices = changedVertices;
+        newMesh.triangles = mesh.triangles;
+        newMesh.uv = mesh.uv;
+
+        return newMesh;
+        
+    }
 
     public static Mesh CreateSimpleWallGameObject(Vector3[] vertices, float height)
     {
@@ -193,12 +216,33 @@ public static class ConvertObjectTo3D
 
     private static Vector2[] GetUVS(Vector3[] meshVertices)
     {
+        float lengthX = meshVertices[3].x - meshVertices[0].x;
+        float lengthY = meshVertices[4].y - meshVertices[0].y;
+        float lengthZ = meshVertices[1].z - meshVertices[0].z;
+        Debug.Log("Length: " + lengthX + " " + lengthY + " " + lengthZ);
+
         Vector2[] uvs = new Vector2[8];
-        for (int i =0; i<8; i++)
-        {
-            uvs[i].x = meshVertices[i].x;
-            uvs[i].y = meshVertices[i].y;
-        }
+
+        /*uvs[0] = new Vector3(0, 0);
+        uvs[1] = new Vector3(lengthZ / (lengthX + lengthZ), 0);
+        uvs[2] = new Vector3(1, 0);
+        uvs[3] = new Vector3(lengthX / (lengthX + lengthZ), 0);
+
+        uvs[4] = new Vector3(0, 1);
+        uvs[5] = new Vector3(lengthZ / (lengthX + lengthZ), 1);
+        uvs[6] = new Vector3(1, 1);
+        uvs[7] = new Vector3(lengthX / (lengthX + lengthZ), 1);*/
+
+        uvs[0] = new Vector3(0, 0);
+        uvs[1] = new Vector3(lengthZ / 3 , 0);
+        uvs[2] = new Vector3((lengthX + lengthZ)/3, 0);
+        uvs[3] = new Vector3(lengthX / 3 , 0);
+
+        uvs[4] = new Vector3(0, 1);
+        uvs[5] = new Vector3(lengthZ / 3, 1);
+        uvs[6] = new Vector3((lengthX + lengthZ)/3, 1);
+        uvs[7] = new Vector3(lengthX / 3 , 1);
+
         return uvs;
     }
 
