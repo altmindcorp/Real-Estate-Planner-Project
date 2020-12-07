@@ -67,15 +67,6 @@ public class UIController : MonoBehaviour
             bottomText.gameObject.SetActive(false);
             bottomInputField.gameObject.SetActive(false);
         }
-
-        else if (dropdown.value == 4)
-        {
-            //topInputField.text = StaticClass.doorLength.ToString();
-            topText.text = "Floor";
-            //topInputField.placeholder.GetComponent<TMP_Text>().text = StaticClass.doorLength.ToString();
-            bottomText.gameObject.SetActive(false);
-            bottomInputField.gameObject.SetActive(false);
-        }
     }
 
     public void GetTopInput(TMP_InputField inputField)

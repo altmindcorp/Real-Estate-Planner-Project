@@ -7,7 +7,6 @@ TagManager:
   - PlanObject
   - PlanObjectWall
   - PlanObjectAnchor
-  - Floor
   layers:
   - Default
   - TransparentFX
