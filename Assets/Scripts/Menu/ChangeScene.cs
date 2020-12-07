@@ -8,7 +8,7 @@ public class ChangeScene : MonoBehaviour
 {
     public void btn_change_scene(string scene_name)
     {
-        /*foreach (GameObject gameObj in StaticClass.plan.planGameObjects)
+        foreach (GameObject gameObj in StaticClass.plan.planGameObjects)
         {
             PlanObject planObject = gameObj.GetComponent<PlanObject>();
             if (planObject is PlanObjectSimpWall)
@@ -24,7 +24,7 @@ public class ChangeScene : MonoBehaviour
                     ConvertObjectTo3D.wallVerticesList.Add(planObjectWall.GetVertices());
                 }
             }
-        }*/
+        }
 
         ConvertObjectTo3D.GetPlanObjects();
         SceneManager.LoadScene(scene_name);
