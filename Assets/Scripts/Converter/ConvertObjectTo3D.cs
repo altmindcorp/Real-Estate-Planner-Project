@@ -223,25 +223,15 @@ public static class ConvertObjectTo3D
 
         Vector2[] uvs = new Vector2[8];
 
-        /*uvs[0] = new Vector3(0, 0);
-        uvs[1] = new Vector3(lengthZ / (lengthX + lengthZ), 0);
-        uvs[2] = new Vector3(1, 0);
-        uvs[3] = new Vector3(lengthX / (lengthX + lengthZ), 0);
-
-        uvs[4] = new Vector3(0, 1);
-        uvs[5] = new Vector3(lengthZ / (lengthX + lengthZ), 1);
-        uvs[6] = new Vector3(1, 1);
-        uvs[7] = new Vector3(lengthX / (lengthX + lengthZ), 1);*/
-
         uvs[0] = new Vector3(0, 0);
         uvs[1] = new Vector3(lengthZ / 3 , 0);
         uvs[2] = new Vector3((lengthX + lengthZ)/3, 0);
         uvs[3] = new Vector3(lengthX / 3 , 0);
 
-        uvs[4] = new Vector3(0, 1);
-        uvs[5] = new Vector3(lengthZ / 3, 1);
-        uvs[6] = new Vector3((lengthX + lengthZ)/3, 1);
-        uvs[7] = new Vector3(lengthX / 3 , 1);
+        uvs[4] = new Vector3(0, lengthY);
+        uvs[5] = new Vector3(lengthZ / 3, lengthY);
+        uvs[6] = new Vector3((lengthX + lengthZ)/3, lengthY);
+        uvs[7] = new Vector3(lengthX / 3 , lengthY);
 
         return uvs;
     }

@@ -8,6 +8,7 @@ public class ChangeScene : MonoBehaviour
 {
     public void btn_change_scene(string scene_name)
     {
+<<<<<<< Updated upstream
         foreach (GameObject gameObj in StaticClass.plan.planGameObjects)
         {
             PlanObject planObject = gameObj.GetComponent<PlanObject>();
@@ -26,6 +27,8 @@ public class ChangeScene : MonoBehaviour
             }
         }
 
+=======
+>>>>>>> Stashed changes
         ConvertObjectTo3D.GetPlanObjects();
         SceneManager.LoadScene(scene_name);
         
