@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using TMPro;
 using UnityEngine.EventSystems;
 
 public class Pointer : MonoBehaviour
 {
+    
     public TMP_Text measureTextHint;
     //public TMP_Text topText;
     //public TMP_Text bottomText;
@@ -27,7 +29,7 @@ public class Pointer : MonoBehaviour
     private RaycastHit hit;
     //private Ray ray;
     //private bool mouseHold = false;
-
+    public UnityEvent spawnEvent;
     GameObject currentGameObject;
     private PlanObject planObj;
     private Floor floorObj;
@@ -44,8 +46,20 @@ public class Pointer : MonoBehaviour
     }
     Vector3 direction;
     Vector3[] objectVertices;
+    
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+        {
+            if (Physics.Raycast(camera.ScreenPointToRay(Input.mousePosition), out hit))
+            {
+                //spawnEvent.Invoke();
+            }
+        }
+    }
+
     // Update is called once per frame
-    void Update()
+    /*void Update()
     {
         if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
@@ -60,6 +74,7 @@ public class Pointer : MonoBehaviour
                         {
                             currentGameObject = StaticClass.CreateAnchor(GetStartPoint(hit.point), StaticClass.GetScale(), anchorMaterial, measureTextHint);
                         }
+
                     }
                     else if (UIController.objectTypeMode == 1)//wall
                     {
@@ -69,7 +84,7 @@ public class Pointer : MonoBehaviour
                             planObj = hit.transform.gameObject.GetComponent<PlanObject>();
                             if (planObj is PlanObjectAnchor)
                             {
-                                currentGameObject = StaticClass.CreateSimpWall(planObj.vertices[0], planObj.GetScale(), wallMaterial, measureTextHint);
+                                //currentGameObject = StaticClass.CreateSimpWall(planObj.vertices[0], planObj.GetScale(), wallMaterial, measureTextHint);
                             }
                         }
                     }
@@ -149,7 +164,7 @@ public class Pointer : MonoBehaviour
 
                     if (planObj != null)
                     {
-                        objectVertices = planObj.GetMesh().vertices;
+                        //objectVertices = planObj.GetMesh().vertices;
                     }
                 }
 
@@ -216,7 +231,7 @@ public class Pointer : MonoBehaviour
                     else if (floorObj != null)
                     {
                         Debug.Log("Updating Floor");
-                        floorObj.UpdateFloor(0, hit.point);
+                        //floorObj.UpdateFloor(0, hit.point);
                     }
 
                 }
@@ -351,5 +366,5 @@ public class Pointer : MonoBehaviour
     {
         //if object type == 0 => anchor scale Y = input.value
         //if 2 || 3 => disable input
-    }
+    }*/
 }

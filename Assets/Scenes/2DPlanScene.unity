@@ -2696,6 +2696,20 @@ MonoBehaviour:
     type: 3}
   spawnPrefab: {fileID: 7730695280816272430, guid: ba2a8dfd6ee387e4db9a904a105adb83,
     type: 3}
+  spawnEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   camera: {fileID: 963194227}
 --- !u!114 &963194231
 MonoBehaviour:
@@ -2920,7 +2934,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1126185878}
   - component: {fileID: 1126185877}
-  - component: {fileID: 1126185879}
   m_Layer: 8
   m_Name: Grid
   m_TagString: Untagged
@@ -2957,18 +2970,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1126185879
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1126185876}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8594d0e27d3c8ef4f84d3728aef7bd60, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1164037111
 GameObject:
   m_ObjectHideFlags: 0
@@ -3371,15 +3372,13 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
-    - m_Text: Add Anchor
+    - m_Text: Add Floor
       m_Image: {fileID: 0}
     - m_Text: Add Wall
       m_Image: {fileID: 0}
     - m_Text: Add Window
       m_Image: {fileID: 0}
     - m_Text: Add Door
-      m_Image: {fileID: 0}
-    - m_Text: Add Floor
       m_Image: {fileID: 0}
     - m_Text: Add Spawn Point
       m_Image: {fileID: 0}
@@ -4201,9 +4200,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1623627215}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8594d0e27d3c8ef4f84d3728aef7bd60, type: 3}
+  m_Script: {fileID: 11500000, guid: 1c465a79669c9b94f81f5e7b82ead08d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabs:
+  - {fileID: 5119730487654573458, guid: 600f6163eed66d247933c0196d469800, type: 3}
+  - {fileID: 5337704985071973870, guid: 70be2b910ffcb6748b653044684ece05, type: 3}
+  - {fileID: 6840220682863791330, guid: 52d2fc51372d45d40b3cd13c8d02874c, type: 3}
+  - {fileID: 5457054359124860582, guid: 1e0b7b37350b7ea4a96bb362dc702550, type: 3}
+  - {fileID: 6227644330513305031, guid: 5d8a82c2b595d654abbfc115a7a619b1, type: 3}
 --- !u!1 &1639007221
 GameObject:
   m_ObjectHideFlags: 0
@@ -4729,7 +4734,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Add Anchor
+  m_text: Add Floor
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

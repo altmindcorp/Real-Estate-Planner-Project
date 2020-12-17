@@ -61,11 +61,38 @@ public static class ConvertObjectTo3D
         
     }
 
+    /*public static Mesh CreateSimpleWall3DObject(Vector3[] vertices, float height)
+    {
+        Vector3[] changedVertices = ChangeDimension(vertices);
+        Vector3 newVertices = new 
+    }*/
+
     public static Mesh CreateSimpleWallGameObject(Vector3[] vertices, float height)
     {
         Vector3[] changedVertices = ChangeDimension(vertices);
         Vector3[] newVertices = new Vector3[8];
         for (int i =0; i<4; i++)
+        {
+            newVertices[i] = changedVertices[i];
+            newVertices[i + 4] = changedVertices[i] + Vector3.up * height;
+        }
+
+        int[] newTriangles = Get3DTriangles();
+        Vector2[] newUVs = GetUVS(newVertices);
+
+        Mesh newMesh = new Mesh();
+        newMesh.vertices = newVertices;
+        newMesh.triangles = newTriangles;
+        newMesh.uv = newUVs;
+
+        return newMesh;
+    }
+
+    public static Mesh CreateSimpleWallGameObject(Mesh mesh, float height)
+    {
+        Vector3[] changedVertices = ChangeDimension(mesh.vertices);
+        Vector3[] newVertices = new Vector3[8];
+        for (int i = 0; i < 4; i++)
         {
             newVertices[i] = changedVertices[i];
             newVertices[i + 4] = changedVertices[i] + Vector3.up * height;
@@ -123,6 +150,8 @@ public static class ConvertObjectTo3D
 
         return newMesh;
     }
+
+     
 
     public static Mesh CreateLowWallObject(Vector3[] vertices, float height)
     {

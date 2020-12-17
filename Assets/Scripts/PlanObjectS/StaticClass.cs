@@ -21,8 +21,7 @@ public static class StaticClass
     private static float wallMultiplierZ = 0.001f;
 
     //temp window length
-    public static int windowLength;
-    public static int doorLength;
+    
     //public static int objectTypeMode = 0;
     //public static int createMode = 0;//0 - create, 1 - delete
     public static void SetCurrentPlan(Plan currentPlan)
@@ -172,8 +171,8 @@ public static class StaticClass
         }
 
         planObjectWall.GetComponent<PlanObjectSimpWall>().direction = direction;
-        planObjectWall.GetComponent<PlanObjectSimpWall>().SetStartPoint();
-        planObjectWall.GetComponent<PlanObjectSimpWall>().vertices = wallVertices;
+        //planObjectWall.GetComponent<PlanObjectSimpWall>().SetStartPoint();
+        //planObjectWall.GetComponent<PlanObjectSimpWall>().vertices = wallVertices;
         mesh.vertices = wallVertices;
         mesh.uv = uvs;
         planObjectWall.GetComponent<MeshFilter>().mesh = mesh;
@@ -205,12 +204,12 @@ public static class StaticClass
         TMPro.TMP_Text textObject = GameObject.Instantiate(hintText, new Vector3(startPoint.x + scale.x * GridScaler.scaleValue / 2, startPoint.y + scale.y * GridScaler.scaleValue / 2, -0.0001f), Quaternion.identity, newGameObject.transform);
         textObject.text = scale.ToString();
         textObject.transform.localScale -= new Vector3(1 - GridScaler.scaleValue * 0.2f, 1 - GridScaler.scaleValue * 0.2f);
-        PlanObjectAnchor anchorPlanObject = newGameObject.AddComponent<PlanObjectAnchor>();
+        //PlanObjectAnchor anchorPlanObject = newGameObject.AddComponent<PlanObjectAnchor>();
         SetMesh(newGameObject, vertices, material);
-        anchorPlanObject.SetTag("PlanObject");
-        anchorPlanObject.SetID(plan.currentID);
-        anchorPlanObject.SetScale(scale);
-        anchorPlanObject.SetVertices();
+        //anchorPlanObject.SetTag("PlanObject");
+        //anchorPlanObject.SetID(plan.currentID);
+        //anchorPlanObject.SetScale(scale);
+        //anchorPlanObject.SetVertices();
         newGameObject.transform.Translate(Vector3.back * anchorMultiplierZ);
         plan.planGameObjects.Add(newGameObject);
         Debug.Log("Create Anchor");
@@ -227,10 +226,10 @@ public static class StaticClass
         textObject.transform.localScale -= new Vector3(1 - GridScaler.scaleValue * 0.2f, 1 - GridScaler.scaleValue * 0.2f);
         PlanObjectSimpWall planObjectSimpWall = newGameObject.AddComponent<PlanObjectSimpWall>();
         SetMesh(newGameObject, vertices, material);
-        planObjectSimpWall.SetTag("PlanObject");
-        planObjectSimpWall.SetID(plan.currentID);
-        planObjectSimpWall.SetScale(scale);
-        planObjectSimpWall.SetVertices();
+        //planObjectSimpWall.SetTag("PlanObject");
+        //planObjectSimpWall.SetID(plan.currentID);
+        //planObjectSimpWall.SetScale(scale);
+        //planObjectSimpWall.SetVertices();
         
         newGameObject.transform.Translate(Vector3.back * wallMultiplierZ);
         //currentPlanObject.SetDirection(direction);
@@ -272,10 +271,10 @@ public static class StaticClass
         GameObject newGameObject = new GameObject("Window");
         Vector3[] vertices = GetVertices(startPoint, scale, 0);
         SetMesh(newGameObject, vertices, material);
-        var planObjectWindow = newGameObject.AddComponent<PlanObjectWindow>();
-        planObjectWindow.SetTag("PlanObject");
-        planObjectWindow.SetID(plan.currentID);
-        planObjectWindow.SetVertices();
+        //var planObjectWindow = newGameObject.AddComponent<PlanObjectWindow>();
+        //planObjectWindow.SetTag("PlanObject");
+        //planObjectWindow.SetID(plan.currentID);
+        //planObjectWindow.SetVertices();
         newGameObject.transform.Translate(Vector3.back * anchorMultiplierZ);
         plan.planGameObjects.Add(newGameObject);
         plan.currentID++;
@@ -288,10 +287,10 @@ public static class StaticClass
         GameObject newGameObject = new GameObject("Door");
         Vector3[] vertices = GetVertices(startPoint, scale, 0);
         SetMesh(newGameObject, vertices, material);
-        var planObjectDoor = newGameObject.AddComponent<PlanObjectDoor>();
-        planObjectDoor.SetTag("PlanObject");
-        planObjectDoor.SetID(plan.currentID);
-        planObjectDoor.SetVertices();
+        //var planObjectDoor = newGameObject.AddComponent<PlanObjectDoor>();
+        //planObjectDoor.SetTag("PlanObject");
+        //planObjectDoor.SetID(plan.currentID);
+        //planObjectDoor.SetVertices();
         newGameObject.transform.Translate(Vector3.back * anchorMultiplierZ);
         plan.planGameObjects.Add(newGameObject);
         plan.currentID++;

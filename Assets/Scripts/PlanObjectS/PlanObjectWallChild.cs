@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlanObjectObject : PlanObject
+public abstract class PlanObjectWallChild : PlanObject 
 {
     public float height;
-    public float position;
+    public float length;
+    //public Vector3 position;
     public Vector3 orientation;
 
 }

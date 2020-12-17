@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class PlanObjectObjectComparer
 {
-    public static int SortByX(PlanObjectObject p1, PlanObjectObject p2)
+    public static int SortByX(WallChildObjectData p1, WallChildObjectData p2)
     {
-        return p1.vertices[0].x.CompareTo(p2.vertices[0].x);
+        return p1.mesh.vertices[0].x.CompareTo(p2.mesh.vertices[0].x);
+        
     }
 
-    public static int SortByY(PlanObjectObject p1, PlanObjectObject p2)
+    public static int SortByY(WallChildObjectData p1, WallChildObjectData p2)
     {
-        return p1.vertices[0].y.CompareTo(p2.vertices[0].y);
+        return p1.mesh.vertices[0].y.CompareTo(p2.mesh.vertices[0].y);
     }
 }

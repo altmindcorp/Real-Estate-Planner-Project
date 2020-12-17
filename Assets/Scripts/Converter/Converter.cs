@@ -22,19 +22,12 @@ public class Converter : MonoBehaviour
     
     private void ConvertTo3D()
     {
-        foreach (PlanObjectSimpWall wallObject in ConvertObjectTo3D.planObjectSimpWallList)
+        Debug.Log("Count: " + ObjectsDataRepository.planObjectsDataList.Count);
+        foreach (PlanObjectData objData in ObjectsDataRepository.planObjectsDataList)
         {
-            if (wallObject.planObjectObjectsList != null)
-            {
-                CreateWallWithObjects(wallObject);
-            }
-
-            else
-            {
-                CreateSimpleWall(wallObject);
-                
-            }
+            ConvertObject(objData);
         }
+
 
         foreach (Floor floorObject in ConvertObjectTo3D.floorObjectsList)
         {
@@ -44,128 +37,182 @@ public class Converter : MonoBehaviour
 
     
 
-    public void CreateWallWithObjects(PlanObjectSimpWall planObjWall)
+    public void CreateWallWithObjects(WallObjectData planObjWallData)
     {
-
-        Vector3[] dividedWallVertices;
         Vector3[] objectVertices = new Vector3[4];
-
-        
-        
-
-        Vector3 direction = planObjWall.direction;
-        Vector3[] wallVertices = planObjWall.vertices;
+        Vector3 direction = planObjWallData.orientation;
+        Vector3[] wallVertices = planObjWallData.mesh.vertices;
 
         if (direction == Vector3.right || direction == Vector3.left)
         {
+            
+            planObjWallData.wallChildObjectsDataList.Sort(PlanObjectObjectComparer.SortByX);
+            
+            var sortedWindows = from obj in planObjWallData.wallChildObjectsDataList
+                                orderby obj.position.x
+                                select obj;
+            WallChildObjectData[] objectsArray = sortedWindows.ToArray();
+            var wallWidth = planObjWallData.mesh.vertices[2].y;
+            objectVertices[1] = planObjWallData.mesh.vertices[1];
+            objectVertices[0] = planObjWallData.mesh.vertices[0];
 
-            planObjWall.planObjectObjectsList.Sort(PlanObjectObjectComparer.SortByX);
-            PlanObjectObject[] objectsArray = planObjWall.planObjectObjectsList.ToArray();
-            /*var sortedWindows = from obj in windowsArray
-                                orderby obj.GetVertices()[0].x
-                                select obj;*/
-
-            objectVertices[2] = wallVertices[1];
-            objectVertices[3] = wallVertices[0];
+            Vector3 wallPosition = planObjWallData.position;
+            Vector3 windowPosition = Vector3.zero;
+            float windowLength = 0;
 
             for (int i = 0; i < objectsArray.Length; i++)
             {
-                dividedWallVertices = new Vector3[4];
-                dividedWallVertices[1] = objectVertices[2];
-                dividedWallVertices[0] = objectVertices[3];
+                windowLength = objectsArray[i].length;
+                windowPosition = objectsArray[i].position;
 
-                objectVertices = objectsArray[i].vertices;
+                objectVertices[2] = windowPosition - wallPosition;
+                objectVertices[2].y += wallWidth;
+                objectVertices[3] = windowPosition - wallPosition;
 
-                if (objectsArray[i] is PlanObjectDoor)
+                CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(objectVertices, planObjWallData.height), wallMaterial, wallPosition, "Divided Wall");//wall
+
+                
+
+                objectVertices[0] = objectsArray[i].mesh.vertices[0];
+                objectVertices[1] = objectsArray[i].mesh.vertices[1];
+
+                objectVertices[2].x = objectVertices[1].x + windowLength;
+                objectVertices[3].x = objectVertices[0].x + windowLength;
+
+                wallPosition.x = windowPosition.x + windowLength;
+
+                //objectVertices = objectsArray[i].vertices;
+
+                /*if (objectsArray[i] is null)
                 {
                     CreateGameObject(ConvertObjectTo3D.CreateHighWallObject(objectVertices, doorHeight, wallHeight), wallMaterial, "High Wall");
-                }
+                }*/
 
-                else if (objectsArray[i] is PlanObjectWindow)
+                if (objectsArray[i] is WindowObjectData)
                 {
-                    CreateGameObject(ConvertObjectTo3D.CreateLowWallObject(objectVertices, windowPositionY), wallMaterial, "Low Wall");
-                    CreateGameObject(ConvertObjectTo3D.CreateWindowGameObject(objectVertices, windowPositionY, windowHeight), windowMaterial, "Window");
-                    CreateGameObject(ConvertObjectTo3D.CreateHighWallObject(objectVertices, windowPositionY + windowHeight, wallHeight), wallMaterial, "High Wall");
+                    CreateGameObject(ConvertObjectTo3D.CreateLowWallObject(objectVertices, windowPositionY), wallMaterial, windowPosition, "Low Wall");
+                    CreateGameObject(ConvertObjectTo3D.CreateWindowGameObject(objectVertices, windowPositionY, windowHeight), windowMaterial, windowPosition, "Window");
+                    CreateGameObject(ConvertObjectTo3D.CreateHighWallObject(objectVertices, windowPositionY + windowHeight, wallHeight), wallMaterial, windowPosition, "High Wall");
                 }
 
-                dividedWallVertices[2] = objectVertices[1];
-                dividedWallVertices[3] = objectVertices[0];
-
-                CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(dividedWallVertices, wallHeight), wallMaterial, "Simple Wall");
+                objectVertices[0] = Vector3.zero;
+                objectVertices[1] = Vector3.zero + Vector3.up * wallWidth;
             }
 
-            dividedWallVertices = new Vector3[4];
-            dividedWallVertices[0] = objectVertices[3];
-            dividedWallVertices[1] = objectVertices[2];
-            dividedWallVertices[2] = wallVertices[2];
-            dividedWallVertices[3] = wallVertices[3];
+            wallPosition.x = windowPosition.x + windowLength;
 
-            CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(dividedWallVertices, wallHeight), wallMaterial, "Simple Wall");
+            objectVertices[2].x = planObjWallData.position.x + planObjWallData.mesh.vertices[2].x - (windowPosition.x + windowLength);
+            objectVertices[3].x = planObjWallData.position.x + planObjWallData.mesh.vertices[3].x - (windowPosition.x + windowLength);
+
+            CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(objectVertices, wallHeight), wallMaterial, wallPosition, "Simple Wall");
         }
 
         else if (direction == Vector3.up || direction == Vector3.down)
         {
-            planObjWall.planObjectObjectsList.Sort(PlanObjectObjectComparer.SortByY);
-            PlanObjectObject[] objectsArray = planObjWall.planObjectObjectsList.ToArray();
+            planObjWallData.wallChildObjectsDataList.Sort(PlanObjectObjectComparer.SortByX);
 
-            objectVertices[1] = wallVertices[0];
-            objectVertices[2] = wallVertices[3];
+            var sortedWindows = from obj in planObjWallData.wallChildObjectsDataList
+                                orderby obj.position.y
+                                select obj;
+            WallChildObjectData[] objectsArray = sortedWindows.ToArray();
+            var wallWidth = planObjWallData.mesh.vertices[2].x;
+            objectVertices[0] = planObjWallData.mesh.vertices[0];
+            objectVertices[3] = planObjWallData.mesh.vertices[3];
 
-            for (int i =0; i< objectsArray.Length; i++)
+            Vector3 wallPosition = planObjWallData.position;
+            Vector3 windowPosition = Vector3.zero;
+            float windowLength = 0;
+
+            for (int i = 0; i < objectsArray.Length; i++)
             {
-                dividedWallVertices = new Vector3[4];
-                dividedWallVertices[0] = objectVertices[1];
-                dividedWallVertices[3] = objectVertices[2];
+                windowLength = objectsArray[i].length;
+                windowPosition = objectsArray[i].position;
 
-                objectVertices = objectsArray[i].vertices;
+                objectVertices[1] = windowPosition - wallPosition;
+                objectVertices[2] = windowPosition - wallPosition;
+                objectVertices[2].x += wallWidth;
 
-                if (objectsArray[i] is PlanObjectDoor)
+                CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(objectVertices, planObjWallData.height), wallMaterial, wallPosition, "Divided Wall");//wall
+
+
+
+                objectVertices[0] = objectsArray[i].mesh.vertices[0];
+                objectVertices[3] = objectsArray[i].mesh.vertices[3];
+
+                objectVertices[1].y = objectVertices[0].y + windowLength;
+                objectVertices[2].y = objectVertices[3].y + windowLength;
+
+                wallPosition.y = windowPosition.y + windowLength;
+
+                //objectVertices = objectsArray[i].vertices;
+
+                /*if (objectsArray[i] is null)
                 {
                     CreateGameObject(ConvertObjectTo3D.CreateHighWallObject(objectVertices, doorHeight, wallHeight), wallMaterial, "High Wall");
-                }
+                }*/
 
-                else if (objectsArray[i] is PlanObjectWindow)
+                if (objectsArray[i] is WindowObjectData)
                 {
-                    CreateGameObject(ConvertObjectTo3D.CreateLowWallObject(objectVertices, windowPositionY), wallMaterial, "Low Wall");
-                    CreateGameObject(ConvertObjectTo3D.CreateWindowGameObject(objectVertices, windowPositionY, windowHeight), windowMaterial, "Window");
-                    CreateGameObject(ConvertObjectTo3D.CreateHighWallObject(objectVertices, windowPositionY + windowHeight, wallHeight), wallMaterial, "High Wall");
+                    CreateGameObject(ConvertObjectTo3D.CreateLowWallObject(objectVertices, windowPositionY), wallMaterial, windowPosition, "Low Wall");
+                    CreateGameObject(ConvertObjectTo3D.CreateWindowGameObject(objectVertices, windowPositionY, windowHeight), windowMaterial, windowPosition, "Window");
+                    CreateGameObject(ConvertObjectTo3D.CreateHighWallObject(objectVertices, windowPositionY + windowHeight, wallHeight), wallMaterial, windowPosition, "High Wall");
                 }
 
-                dividedWallVertices[1] = objectVertices[0];
-                dividedWallVertices[2] = objectVertices[3];
-
-                CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(dividedWallVertices, wallHeight), wallMaterial, "Simple Wall " + i);
+                objectVertices[0] = Vector3.zero;
+                objectVertices[3] = Vector3.zero + Vector3.right * wallWidth;
             }
 
-            dividedWallVertices = new Vector3[4];
+            wallPosition.y = windowPosition.y + windowLength;
 
-            dividedWallVertices[0] = objectVertices[1];
-            dividedWallVertices[3] = objectVertices[2];
+            objectVertices[1].y = planObjWallData.position.y + planObjWallData.mesh.vertices[1].y - (windowPosition.y + windowLength);
+            objectVertices[2].y = planObjWallData.position.y + planObjWallData.mesh.vertices[2].y - (windowPosition.y + windowLength);
 
-            dividedWallVertices[1] = wallVertices[1];
-            dividedWallVertices[2] = wallVertices[2];
-
-            CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(dividedWallVertices, wallHeight), wallMaterial, "Last Simple Wall");
+            CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(objectVertices, wallHeight), wallMaterial, wallPosition, "Simple Wall");
         }
     }
 
-    private void CreateGameObject(Mesh mesh, Material material, string name)
+    private void CreateGameObject(Mesh mesh, Material material, Vector3 position, string name)
     {
         GameObject newGameObject = new GameObject(name);
         newGameObject.AddComponent<MeshFilter>().mesh = mesh;
         newGameObject.AddComponent<MeshRenderer>().material = material;
         newGameObject.AddComponent<MeshCollider>().sharedMesh = mesh;
+        newGameObject.transform.Translate(new Vector3(position.x, 0, position.y));
         
     }
     private void CreateSimpleWall(PlanObjectSimpWall planObjWall)
     {
-        CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(planObjWall.vertices, wallHeight), wallMaterial, "Not Divided Simple Wall");
+       //CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(planObjWall.vertices, wallHeight), wallMaterial, "Not Divided Simple Wall");
         
+    }
+
+    private void CreateSimpleWall(WallObjectData wallData)
+    {
+
+    }
+
+    private void ConvertObject(PlanObjectData planObj)
+    {
+        if (planObj is WallObjectData)
+        {
+            var wallPlanObjData = planObj as WallObjectData;
+            
+            if (wallPlanObjData.wallChildObjectsDataList.Count!=0)
+            {                
+                CreateWallWithObjects(wallPlanObjData);
+            }
+
+            else
+            {
+                CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(planObj.mesh, 2.75f), wallMaterial, new Vector3(planObj.position.x, 0, planObj.position.y), "Simple Wall");
+            }
+            
+        }
     }
 
     private void CreateFloor(Floor floorObject)
     {
-        CreateGameObject(ConvertObjectTo3D.CreateFloorGameObject(floorObject.meshFilter.mesh), floorMaterial, "Floor");
+        //CreateGameObject(ConvertObjectTo3D.CreateFloorGameObject(floorObject.meshFilter.mesh), floorMaterial, "Floor");
         Destroy(floorObject);
     }
     private void SpawnPlane()

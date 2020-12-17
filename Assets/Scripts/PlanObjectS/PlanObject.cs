@@ -1,52 +1,57 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using System.Linq;
 
-public class PlanObject : MonoBehaviour
+public abstract class PlanObject : MonoBehaviour, ISpawner
 {
+    public int id;
+    public Vector2 maxBounds;
+    public Vector2 minBounds;
+    public MeshRenderer meshRenderer;
+    public MeshFilter meshFilter;
+    public MeshCollider meshCollider;
 
-    public Vector3[] vertices = new Vector3[4];
-    private int id;
-    protected Vector3 scale;
-
-    public void SetVertices()
+    public abstract void AddAdditionalValues();
+    public abstract void OnMouseDrag();
+    public abstract void OnMouseDown();
+    public void CreatePlanObject()
     {
-        vertices = GetComponent<MeshFilter>().mesh.vertices;
+        this.id = ObjectsDataRepository.currentID;
+        Debug.Log("Mesh Scale: " + ObjectsParams.scale);
+        this.meshFilter.mesh = MeshCreator.Create2DMesh(ObjectsParams.scale, 0);
+        RecalculateWorldBounds();
+        this.meshCollider.sharedMesh = this.meshFilter.mesh;
+        AddAdditionalValues();
+        Plane.PlanObjectsList.Add(this);
+        ObjectsDataRepository.currentID++;
     }
 
-    public Mesh GetMesh()
+    public void CreatePlanObject(Vector3 scale)
     {
-        return GetComponent<MeshFilter>().mesh;
+        this.id = ObjectsDataRepository.currentID;
+        Debug.Log("Mesh Scale: " + scale);
+        this.meshFilter.mesh = MeshCreator.Create2DMesh(scale, 0);
+        
+        RecalculateWorldBounds();
+        this.meshCollider.sharedMesh = this.meshFilter.mesh;
+        AddAdditionalValues();
+        Plane.PlanObjectsList.Add(this);
+        ObjectsDataRepository.currentID++;
     }
 
-    public int GetID()
+    public void RecalculateWorldBounds()
     {
-        return id;
+        this.meshFilter.mesh.RecalculateBounds();
+        maxBounds = meshFilter.mesh.bounds.max + transform.position;
+        minBounds = meshFilter.mesh.bounds.min + transform.position;
+        this.meshCollider.sharedMesh = null;
+        this.meshCollider.sharedMesh = this.meshFilter.mesh;
     }
 
-    public void SetID(int id)
+    public void DestroyThisObject()
     {
-        this.id = id;
+        Destroy(this.gameObject);
     }
-
-    public void SetTag(string tag)
-    {
-        gameObject.tag = tag;
-    }
-
-    public Vector3 GetScale()
-    {
-        return scale;
-    }
-
-    public void SetScale(Vector3 scale)
-    {
-        this.scale = scale;
-    }
-
-    /*public Vector3[] GetVertices()
-    {
-        return GetComponent<MeshFilter>().mesh.vertices;
-    }*/
 }

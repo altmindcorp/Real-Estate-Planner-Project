@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Floor : MonoBehaviour
+public class Floor : PlanObject
 {
     public List<Vector3> vertices = new List<Vector3>();
     
 
-    public Material material;
-    public MeshRenderer meshRenderer;
-    public MeshFilter meshFilter;
-    public MeshCollider meshCollider;
+    //public Material material;
+    //public MeshRenderer meshRenderer;
+    //public MeshFilter meshFilter;
+    //public MeshCollider meshCollider;
     private Vector3 startPoint;
 
     public void SetFloor(Vector3 startPoint, Material material)
@@ -20,17 +20,12 @@ public class Floor : MonoBehaviour
             Debug.LogError("Mesh is null");
         }
         this.startPoint = startPoint;
-        SetStartMeshParameters();
-        SetMaterial(material);
-        AddToPlanList();
+        //SetStartMeshParameters();
+        //SetMaterial(material);
+        //AddToPlanList();
     }
 
-    private void Awake()
-    {
-        DontDestroyOnLoad(this.gameObject);
-    }
-
-    public void UpdateFloor(int mode, Vector3 mousePosition)
+    /*public void UpdateFloor(int mode, Vector3 mousePosition)
     {
         if (mode == 0)
         {
@@ -100,11 +95,6 @@ public class Floor : MonoBehaviour
         Vector3 vertice2 = new Vector3((int)(startPoint.x / GridScaler.scaleValue) * GridScaler.scaleValue + GridScaler.scaleValue, (int)(startPoint.y / GridScaler.scaleValue) * GridScaler.scaleValue + GridScaler.scaleValue, -0.02f);
         Vector3 vertice3 = new Vector3((int)(startPoint.x / GridScaler.scaleValue) * GridScaler.scaleValue + GridScaler.scaleValue, (int)(startPoint.y / GridScaler.scaleValue) * GridScaler.scaleValue, -0.02f);
 
-        /*Vector3 vertice0 = new Vector3(0, 0, 0);
-        Vector3 vertice1 = new Vector3(0, 1, 0);
-        Vector3 vertice2 = new Vector3(1, 1, 0);
-        Vector3 vertice3 = new Vector3(1, 0, 0);*/
-
         vertices.Add(vertice0);
         vertices.Add(vertice1);
         vertices.Add(vertice2);
@@ -143,5 +133,27 @@ public class Floor : MonoBehaviour
         meshCollider.sharedMesh = meshFilter.mesh;
         Debug.Log(meshCollider.bounds);
         meshFilter.mesh.RecalculateBounds();
+    }*/
+
+    new public void CreatePlanObject()
+    {
+        
+        this.meshFilter.mesh = MeshCreator.Create2DMesh(ObjectsParams.scale, 0);
+        
+    }
+
+    public override void OnMouseDown()
+    {
+        //CreatePlanObject();
+    }
+
+    public override void AddAdditionalValues()
+    {
+        //throw new System.NotImplementedException();
+    }
+
+    public override void OnMouseDrag()
+    {
+        //throw new System.NotImplementedException();
     }
 }
