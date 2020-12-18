@@ -5,13 +5,15 @@ using UnityEngine;
 public class Floor : PlanObject
 {
     public List<Vector3> vertices = new List<Vector3>();
-    
+
 
     //public Material material;
     //public MeshRenderer meshRenderer;
     //public MeshFilter meshFilter;
     //public MeshCollider meshCollider;
+    private Vector3 initialScale;
     private Vector3 startPoint;
+    public FloorAnchor anchorPrefab;
 
     public void SetFloor(Vector3 startPoint, Material material)
     {
@@ -149,11 +151,41 @@ public class Floor : PlanObject
 
     public override void AddAdditionalValues()
     {
-        //throw new System.NotImplementedException();
+        initialScale = new Vector3 (1,1,0);
+
+        FloorAnchor anchor;
+        anchor = Instantiate(anchorPrefab, this.transform, false);
+        anchor.transform.Translate(new Vector3(0.05f, 0.05f, -0.0001f), Space.World);
+        anchor.verticeNumber = 0;
+        anchor.floor = this;
+
+        anchor = Instantiate(anchorPrefab, this.transform, false);
+        anchor.transform.Translate(new Vector3(0.05f, -0.05f + 1, -0.001f), Space.World);
+        anchor.verticeNumber = 1;
+        anchor.floor = this;
+
+        anchor = Instantiate(anchorPrefab, this.transform, false);
+        anchor.transform.Translate(new Vector3(-0.05f + 1, -0.05f + 1, -0.001f), Space.World);
+        anchor.verticeNumber = 2;
+        anchor.floor = this;
+
+        anchor = Instantiate(anchorPrefab, this.transform, false);
+        anchor.transform.Translate(new Vector3(-0.05f + 1, 0.05f, -0.001f), Space.World);
+        anchor.verticeNumber = 3;
+        anchor.floor = this;
+
+        FloorObjectData floorData = new FloorObjectData(this.meshFilter.mesh, this.meshRenderer.material, this.transform.position, this.id);
+        ObjectsDataRepository.planObjectsDataList.Add(floorData);
     }
 
     public override void OnMouseDrag()
     {
         //throw new System.NotImplementedException();
+    }
+
+    public void ChangeVerticePosition(int verticeNumber, Vector3 positionChange)
+    {
+        this.meshFilter.mesh = MeshCreator.ChangeFloorMesh(this.meshFilter.mesh, verticeNumber, positionChange, initialScale);
+        ObjectsDataRepository.ChangeMesh(this.meshFilter.mesh, this.id);
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Plane : MonoBehaviour, ISpawner
 {
+    private bool spawnSet = false;
     public GameObject[] prefabs;
     public static List<PlanObject> PlanObjectsList = new List<PlanObject>();
 
@@ -17,7 +18,8 @@ public class Plane : MonoBehaviour, ISpawner
                 if (prefabs[0] != null)
                 {
                     var floorObject = Instantiate(prefabs[0], UIController.GetScaledObjectPosition(-0.0001f), Quaternion.identity).GetComponent<Floor>();
-                    floorObject.CreatePlanObject(ObjectsParams.scale);
+                    floorObject.CreatePlanObject(new Vector3(1, 1, 0));
+                    
                 }
             }
 
@@ -28,6 +30,15 @@ public class Plane : MonoBehaviour, ISpawner
                     var anchorObject = Instantiate(prefabs[1], UIController.GetScaledObjectPosition(-0.0003f), Quaternion.identity).GetComponent<PlanObjectAnchor>();
                     anchorObject.CreatePlanObject(ObjectsParams.scale);
                     
+                }
+            }
+
+            else if (UIController.objectTypeMode == 4)//
+            {
+                if (prefabs[5] != null && !spawnSet)
+                {
+                    ObjectsDataRepository.spawnPointPosition = Instantiate(prefabs[5], UIController.GetScaledObjectPosition(-0.0002f) + new Vector3(0.5f, 0.5f, 0), Quaternion.Euler(Vector3.left * 90)).transform.position;
+                    spawnSet = true;
                 }
             }
         }       
