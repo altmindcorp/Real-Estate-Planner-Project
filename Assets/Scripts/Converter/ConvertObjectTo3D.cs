@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public static class ConvertObjectTo3D
 {
@@ -61,6 +62,16 @@ public static class ConvertObjectTo3D
         
     }
 
+    public static Mesh CreateCeiling(Mesh mesh)
+    {
+        Vector3[] changedVertices = ChangeDimension(mesh.vertices);
+        Mesh newMesh = new Mesh();
+        newMesh.vertices = changedVertices;
+        newMesh.triangles = mesh.triangles.Reverse().ToArray();
+        newMesh.uv = mesh.uv;
+
+        return newMesh;
+    }
     /*public static Mesh CreateSimpleWall3DObject(Vector3[] vertices, float height)
     {
         Vector3[] changedVertices = ChangeDimension(vertices);

@@ -8,6 +8,7 @@ public class Converter : MonoBehaviour
     public Material wallMaterial;
     public Material windowMaterial;
     public Material floorMaterial;
+    public Material ceilingMaterial;
 
     private static float doorHeight = 2.4f;
     private static float wallHeight = 2.75f;
@@ -180,6 +181,16 @@ public class Converter : MonoBehaviour
         newGameObject.transform.Translate(new Vector3(position.x, 0, position.y));
         
     }
+
+    private void CreateGameObject(Mesh mesh, Material material, Vector3 position, float height, string name)
+    {
+        GameObject newGameObject = new GameObject(name);
+        newGameObject.AddComponent<MeshFilter>().mesh = mesh;
+        newGameObject.AddComponent<MeshRenderer>().material = material;
+        newGameObject.AddComponent<MeshCollider>().sharedMesh = mesh;
+        newGameObject.transform.Translate(new Vector3(position.x, height, position.y));
+
+    }
     private void CreateSimpleWall(PlanObjectSimpWall planObjWall)
     {
        //CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(planObjWall.vertices, wallHeight), wallMaterial, "Not Divided Simple Wall");
@@ -212,6 +223,7 @@ public class Converter : MonoBehaviour
         else if (planObj is FloorObjectData)
         {
             CreateGameObject(ConvertObjectTo3D.CreateFloorGameObject(planObj.mesh), floorMaterial, planObj.position, "Floor");
+            CreateGameObject(ConvertObjectTo3D.CreateCeiling(planObj.mesh), ceilingMaterial, planObj.position, 2.75f, "Ceiling");
             Debug.Log("Floor Position: " + planObj.position);
         }
     }
