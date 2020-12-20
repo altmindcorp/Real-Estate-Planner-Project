@@ -8,7 +8,7 @@ public class ChangeScene : MonoBehaviour
 {
     public void btn_change_scene(string scene_name)
     {
-        ConvertObjectTo3D.GetPlanObjects();
+        //ConvertObjectTo3D.GetPlanObjects();
         SceneManager.LoadScene(scene_name);
         
     }
