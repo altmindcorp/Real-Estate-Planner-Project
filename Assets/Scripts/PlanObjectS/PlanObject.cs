@@ -19,6 +19,7 @@ public abstract class PlanObject : MonoBehaviour, ISpawner
     public void CreatePlanObject()
     {
         this.id = ObjectsDataRepository.currentID;
+        Debug.Log("ID: " + this.id);
         Debug.Log("Mesh Scale: " + ObjectsParams.scale);
         this.meshFilter.mesh = MeshCreator.Create2DMesh(ObjectsParams.scale, 0);
         RecalculateWorldBounds();
@@ -33,7 +34,7 @@ public abstract class PlanObject : MonoBehaviour, ISpawner
         this.id = ObjectsDataRepository.currentID;
         Debug.Log("Mesh Scale: " + scale);
         this.meshFilter.mesh = MeshCreator.Create2DMesh(scale, 0);
-        
+        Debug.Log("ID: " + this.id);
         RecalculateWorldBounds();
         this.meshCollider.sharedMesh = this.meshFilter.mesh;
         AddAdditionalValues();

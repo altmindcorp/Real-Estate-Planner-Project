@@ -33,14 +33,14 @@ public class UIController : MonoBehaviour
     {
         objectTypeDropdown.value = 0;
         modeTypeDropdown.value = 0;
-        StaticClass.ChangeScaleX(4);
-        StaticClass.ChangeScaleY(4);
-        ObjectsParams.windowLength = 8;
-        ObjectsParams.doorLength = 6;
-        topInputField.placeholder.GetComponent<TMP_Text>().text = ((int)StaticClass.GetScale().x).ToString();
-        bottomInputField.placeholder.GetComponent<TMP_Text>().text = ((int)StaticClass.GetScale().y).ToString();
-        topText.text = "Anchor X length, sm: ";
-        bottomText.text = "Anchor Y length, sm: ";
+        ObjectsParams.windowLength = 120;
+        ObjectsParams.doorLength = 60;
+        //topInputField.placeholder.GetComponent<TMP_Text>().text = ((int)StaticClass.GetScale().x).ToString();
+        //bottomInputField.placeholder.GetComponent<TMP_Text>().text = ((int)StaticClass.GetScale().y).ToString();
+        topText.text = "Floor Scale: 1x1 m ";
+        topInputField.gameObject.SetActive(false);
+        bottomText.gameObject.SetActive(false);
+        bottomInputField.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -55,29 +55,32 @@ public class UIController : MonoBehaviour
         Debug.Log("Mode: " + objectTypeMode);
         if (dropdown.value == 1)//wall
         {
-            topText.text = "Length X, sm: ";
-            bottomText.text = "Length Y, sm: ";
+            topText.text = "Length X, m: ";
             bottomText.gameObject.SetActive(true);
+            bottomText.text = "Length Y, m: ";
             bottomInputField.gameObject.SetActive(true);
-            //topInputField.placeholder.GetComponent<TMP_Text>().text = ((int)StaticClass.GetScale().x).ToString();
+            topInputField.gameObject.SetActive(true);
             topInputField.text = ObjectsParams.scale.x.ToString();
-            //bottomInputField.placeholder.GetComponent<TMP_Text>().text = ((int)StaticClass.GetScale().y).ToString();
             bottomInputField.text = ObjectsParams.scale.y.ToString();
+            Debug.Log("Scale: " + ObjectsParams.scale);
         }
 
         else if (dropdown.value == 2)//window
         {
-            topText.text = "Window Length, sm: ";
-            topInputField.placeholder.GetComponent<TMP_Text>().text = ObjectsParams.windowLength.ToString();
-            topInputField.text = ObjectsParams.windowLength.ToString();
+            topInputField.gameObject.SetActive(true);
             bottomText.gameObject.SetActive(false);
             bottomInputField.gameObject.SetActive(false);
+            topText.text = "Window Length, m: ";
+            topInputField.placeholder.GetComponent<TMP_Text>().text = ObjectsParams.windowLength.ToString();
+            topInputField.text = ObjectsParams.windowLength.ToString();
+            Debug.Log("Scale: " + ObjectsParams.windowLength);
+
         }
 
         else if (dropdown.value == 3)//door
         {
-            topInputField.text = ObjectsParams.doorLength.ToString();
-            topText.text = "Door Length, sm: ";
+            topInputField.text = (ObjectsParams.doorLength / 0.01f).ToString();
+            topText.text = "Door Length, m: ";
             topInputField.placeholder.GetComponent<TMP_Text>().text = ObjectsParams.doorLength.ToString();
             bottomText.gameObject.SetActive(false);
             bottomInputField.gameObject.SetActive(false);
@@ -85,11 +88,11 @@ public class UIController : MonoBehaviour
 
         else if (dropdown.value == 0)//floor
         {
-            //topInputField.text = StaticClass.doorLength.ToString();
             topText.text = "Floor";
-            //topInputField.placeholder.GetComponent<TMP_Text>().text = StaticClass.doorLength.ToString();
+            topInputField.gameObject.SetActive(false);
             bottomText.gameObject.SetActive(false);
             bottomInputField.gameObject.SetActive(false);
+            Debug.Log("Scale: " + ObjectsParams.scale);
         }
     }
 
@@ -102,7 +105,7 @@ public class UIController : MonoBehaviour
         {
             //inputField.text = StaticClass.GetScale().x.ToString();
             //StaticClass.ChangeScaleX(int.Parse(inputField.text));
-            ObjectsParams.scale.x = int.Parse(inputField.text) * 0.01f;
+            ObjectsParams.scale.x = float.Parse(inputField.text);
             Debug.Log("Object Params Scale: " + ObjectsParams.scale.x);
             //inputField.placeholder.GetComponent<TMP_Text>().text = ((int)StaticClass.GetScale().x).ToString();
         }
@@ -110,14 +113,14 @@ public class UIController : MonoBehaviour
         if (objectTypeMode == 2)
         {
             //inputField.text = StaticClass.windowLength.ToString();
-            ObjectsParams.windowLength = int.Parse(inputField.text) * 0.01f;
+            ObjectsParams.windowLength = float.Parse(inputField.text);
             //inputField.placeholder.GetComponent<TMP_Text>().text = StaticClass.windowLength.ToString();
         }
 
         if (objectTypeMode == 3)
         {
             //inputField.text = StaticClass.doorLength.ToString();
-            ObjectsParams.doorLength = int.Parse(inputField.text) * 0.01f;
+            ObjectsParams.doorLength = float.Parse(inputField.text);
             //inputField.placeholder.GetComponent<TMP_Text>().text = StaticClass.doorLength.ToString();
         }
     }
@@ -128,7 +131,7 @@ public class UIController : MonoBehaviour
         if (objectTypeMode == 1)
         {
             //inputField.text = StaticClass.GetScale().y.ToString();
-            ObjectsParams.scale.y = int.Parse(inputField.text) * 0.01f;
+            ObjectsParams.scale.y = float.Parse(inputField.text);
             //inputField.placeholder.GetComponent<TMP_Text>().text = ((int)StaticClass.GetScale().y).ToString();
         }
     }

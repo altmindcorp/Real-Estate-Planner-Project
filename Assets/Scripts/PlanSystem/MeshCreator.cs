@@ -131,6 +131,21 @@ public static class MeshCreator
         
     }
 
+    public static Mesh ChangeFloorMesh(Mesh mesh, int positionNumber, Vector3 positionChange, Vector3 initialScale)
+    {
+        Vector3[] vertices = mesh.vertices;
+        Vector2[] newUVs = mesh.uv;
+
+        vertices[positionNumber] += positionChange;
+        newUVs[positionNumber] += new Vector2(positionChange.x / initialScale.x, positionChange.y / initialScale.y);
+        Mesh newMesh = new Mesh();
+        newMesh.vertices = vertices;
+        newMesh.uv = newUVs;
+        newMesh.triangles = mesh.triangles;
+
+        return newMesh;
+    }
+
     public static void Create3DMesh()
     {
 

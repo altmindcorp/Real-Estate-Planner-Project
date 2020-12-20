@@ -204,9 +204,15 @@ public class Converter : MonoBehaviour
 
             else
             {
-                CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(planObj.mesh, 2.75f), wallMaterial, new Vector3(planObj.position.x, 0, planObj.position.y), "Simple Wall");
+                CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(planObj.mesh, 2.75f), wallMaterial, planObj.position, "Simple Wall");
             }
             
+        }
+
+        else if (planObj is FloorObjectData)
+        {
+            CreateGameObject(ConvertObjectTo3D.CreateFloorGameObject(planObj.mesh), floorMaterial, planObj.position, "Floor");
+            Debug.Log("Floor Position: " + planObj.position);
         }
     }
 
