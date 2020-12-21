@@ -9,17 +9,17 @@ public class PlanObjectDoor : PlanObjectWallChild
 
     public override void AddAdditionalValues()
     {
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 
     public override void OnMouseDown()
     {
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 
     public override void OnMouseDrag()
     {
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 
     public void OnDestroy()

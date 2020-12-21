@@ -23,12 +23,7 @@ public class Grid : MonoBehaviour
                 gridCells.Add(Instantiate(gridCell, new Vector3(i * GridScaler.scaleValue, j * GridScaler.scaleValue, 0), Quaternion.identity, this.transform));
             }
         }
-        transform.Translate(new Vector3(StaticClass.planeScale - xSize * GridScaler.scaleValue / 2, StaticClass.planeScale - ySize * GridScaler.scaleValue / 2, 0));
-    }
-
-    private void Update()
-    {
-
+        transform.Translate(new Vector3(500 - xSize * GridScaler.scaleValue / 2, 500 - ySize * GridScaler.scaleValue / 2, 0));
     }
 
     private void ChangeGridShape(int change)

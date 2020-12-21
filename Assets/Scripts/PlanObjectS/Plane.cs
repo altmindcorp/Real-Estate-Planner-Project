@@ -33,12 +33,12 @@ public class Plane : MonoBehaviour, ISpawner
                 }
             }
 
-            else if (UIController.objectTypeMode == 4)//
+            else if (UIController.objectTypeMode == 4)//spawn point
             {
                 if (prefabs[5] != null && !spawnSet)
                 {
                     ObjectsDataRepository.spawnPointPosition = Instantiate(prefabs[5], UIController.GetScaledObjectPosition(-0.0002f) + new Vector3(0.5f, 0.5f, 0), Quaternion.Euler(Vector3.left * 90)).transform.position;
-                    spawnSet = true;
+                    ObjectsParams.spawnPointIsSet = true;
                 }
             }
         }       

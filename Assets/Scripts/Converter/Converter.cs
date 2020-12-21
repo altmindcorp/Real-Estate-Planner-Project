@@ -10,10 +10,10 @@ public class Converter : MonoBehaviour
     public Material floorMaterial;
     public Material ceilingMaterial;
 
-    private static float doorHeight = 2.4f;
-    private static float wallHeight = 2.75f;
-    private static float windowHeight = 2;
-    private static float windowPositionY = 0.6f;
+    public GameObject doorPrefab;
+    //private static float wallHeight = 2.75f;
+    //private static float windowHeight = 2;
+    //private static float windowPositionY = 0.6f;
     
     private void Awake()
     {
@@ -84,16 +84,18 @@ public class Converter : MonoBehaviour
 
                 //objectVertices = objectsArray[i].vertices;
 
-                /*if (objectsArray[i] is null)
+                if (objectsArray[i] is DoorObjectData)
                 {
-                    CreateGameObject(ConvertObjectTo3D.CreateHighWallObject(objectVertices, doorHeight, wallHeight), wallMaterial, "High Wall");
-                }*/
+                    Debug.Log("Door Object");
+                    Instantiate(doorPrefab, new Vector3(objectsArray[i].position.x + objectsArray[i].length / 2, 0, objectsArray[i].position.y), Quaternion.identity);
+                }
 
                 if (objectsArray[i] is WindowObjectData)
                 {
-                    CreateGameObject(ConvertObjectTo3D.CreateLowWallObject(objectVertices, windowPositionY), wallMaterial, windowPosition, "Low Wall");
-                    CreateGameObject(ConvertObjectTo3D.CreateWindowGameObject(objectVertices, windowPositionY, windowHeight), windowMaterial, windowPosition, "Window");
-                    CreateGameObject(ConvertObjectTo3D.CreateHighWallObject(objectVertices, windowPositionY + windowHeight, wallHeight), wallMaterial, windowPosition, "High Wall");
+                    var windowObject = objectsArray[i] as WindowObjectData;
+                    CreateGameObject(ConvertObjectTo3D.CreateLowWallObject(objectVertices, windowObject.positionHeight), wallMaterial, windowPosition, "Low Wall");
+                    CreateGameObject(ConvertObjectTo3D.CreateWindowGameObject(objectVertices, windowObject.positionHeight, windowObject.height), windowMaterial, windowPosition, "Window");
+                    CreateGameObject(ConvertObjectTo3D.CreateHighWallObject(objectVertices, windowObject.positionHeight + windowObject.height, planObjWallData.height), wallMaterial, windowPosition, "High Wall");
                 }
 
                 objectVertices[0] = Vector3.zero;
@@ -105,7 +107,7 @@ public class Converter : MonoBehaviour
             objectVertices[2].x = planObjWallData.position.x + planObjWallData.mesh.vertices[2].x - (windowPosition.x + windowLength);
             objectVertices[3].x = planObjWallData.position.x + planObjWallData.mesh.vertices[3].x - (windowPosition.x + windowLength);
 
-            CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(objectVertices, wallHeight), wallMaterial, wallPosition, "Simple Wall");
+            CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(objectVertices, planObjWallData.height), wallMaterial, wallPosition, "Simple Wall");
         }
 
         else if (direction == Vector3.up || direction == Vector3.down)
@@ -147,16 +149,17 @@ public class Converter : MonoBehaviour
 
                 //objectVertices = objectsArray[i].vertices;
 
-                /*if (objectsArray[i] is null)
+                if (objectsArray[i] is DoorObjectData)
                 {
-                    CreateGameObject(ConvertObjectTo3D.CreateHighWallObject(objectVertices, doorHeight, wallHeight), wallMaterial, "High Wall");
-                }*/
+                    Instantiate(doorPrefab, new Vector3(objectsArray[i].position.x, 0, objectsArray[i].position.y + objectsArray[i].length / 2), Quaternion.Euler(0, 90, 0));
+                }
 
-                if (objectsArray[i] is WindowObjectData)
+                else if (objectsArray[i] is WindowObjectData)
                 {
-                    CreateGameObject(ConvertObjectTo3D.CreateLowWallObject(objectVertices, windowPositionY), wallMaterial, windowPosition, "Low Wall");
-                    CreateGameObject(ConvertObjectTo3D.CreateWindowGameObject(objectVertices, windowPositionY, windowHeight), windowMaterial, windowPosition, "Window");
-                    CreateGameObject(ConvertObjectTo3D.CreateHighWallObject(objectVertices, windowPositionY + windowHeight, wallHeight), wallMaterial, windowPosition, "High Wall");
+                    var windowObject = objectsArray[i] as WindowObjectData;
+                    CreateGameObject(ConvertObjectTo3D.CreateLowWallObject(objectVertices, windowObject.positionHeight), wallMaterial, windowPosition, "Low Wall");
+                    CreateGameObject(ConvertObjectTo3D.CreateWindowGameObject(objectVertices, windowObject.positionHeight, windowObject.height), windowMaterial, windowPosition, "Window");
+                    CreateGameObject(ConvertObjectTo3D.CreateHighWallObject(objectVertices, windowObject.positionHeight + windowObject.height, planObjWallData.height), wallMaterial, windowPosition, "High Wall");
                 }
 
                 objectVertices[0] = Vector3.zero;
@@ -168,7 +171,7 @@ public class Converter : MonoBehaviour
             objectVertices[1].y = planObjWallData.position.y + planObjWallData.mesh.vertices[1].y - (windowPosition.y + windowLength);
             objectVertices[2].y = planObjWallData.position.y + planObjWallData.mesh.vertices[2].y - (windowPosition.y + windowLength);
 
-            CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(objectVertices, wallHeight), wallMaterial, wallPosition, "Simple Wall");
+            CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(objectVertices, planObjWallData.height), wallMaterial, wallPosition, "Simple Wall");
         }
     }
 
@@ -191,6 +194,7 @@ public class Converter : MonoBehaviour
         newGameObject.transform.Translate(new Vector3(position.x, height, position.y));
 
     }
+
     private void CreateSimpleWall(PlanObjectSimpWall planObjWall)
     {
        //CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(planObjWall.vertices, wallHeight), wallMaterial, "Not Divided Simple Wall");
