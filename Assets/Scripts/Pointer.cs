@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 public class Pointer : MonoBehaviour
 {
     
-    public TMP_Text measureTextHint;
+    /*public TMP_Text measureTextHint;
     //public TMP_Text topText;
     //public TMP_Text bottomText;
     //public TMP_Dropdown modeDropdown;//0 - add, 1 - delete, 2 - move
@@ -42,7 +42,7 @@ public class Pointer : MonoBehaviour
 
         //modeDropdown.value = 0;
         //objectTypeDropdown.value = 0;
-        StaticClass.SetCurrentPlan(newPlan);
+        //StaticClass.SetCurrentPlan(newPlan);
     }
     Vector3 direction;
     Vector3[] objectVertices;

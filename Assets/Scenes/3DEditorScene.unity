@@ -151,9 +151,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wallMaterial: {fileID: 2100000, guid: 33d693b3c179f6744bf4818f46659c8f, type: 2}
-  windowMaterial: {fileID: 2100000, guid: 4a114631ebb098643a620c3bfe0cc3f5, type: 2}
+  windowMaterial: {fileID: 2100000, guid: 50e5c5dee27c2cd4fbdb31e1be87b92f, type: 2}
   floorMaterial: {fileID: 2100000, guid: 653d1ae046af6d7459fe949a6146e31a, type: 2}
   ceilingMaterial: {fileID: 2100000, guid: fdbb041aa28e1904b82c641971bb0b55, type: 2}
+  doorPrefab: {fileID: 1910880371667356, guid: fb72cc81254f07241b07fcc6986eb510, type: 3}
 --- !u!4 &17770480
 Transform:
   m_ObjectHideFlags: 0

@@ -8,7 +8,7 @@ public static class StaticClass
 
     
     
-    private static Vector3 scale = Vector3.zero;
+    /*private static Vector3 scale = Vector3.zero;
     public static int planeScale = 500;
     private static Vector3 direction = Vector3.zero;
     public static Plan plan;
@@ -33,7 +33,7 @@ public static class StaticClass
     {
         foreach (GameObject planObject in plan.planGameObjects)
         {
-            /*if (planObject is PlanObjectWindow)
+            if (planObject is PlanObjectWindow)
             {
                 PlanObjectWindow windowObject = planObject as PlanObjectWindow;
                 Debug.Log("Window id: " + windowObject.id + ", bottom height: " + windowObject.GetBottomHeight());
@@ -49,7 +49,7 @@ public static class StaticClass
             {
                 PlanObjectDoor doorObject = planObject as PlanObjectDoor;
                 Debug.Log("Wall id: " + doorObject.id + ", height: " + doorObject.GettopHeight());
-            }*/
+            }
         }
     }
 
@@ -189,7 +189,7 @@ public static class StaticClass
         vertices[2] = new Vector3(startpoint.x + scale.x * 0.01f, startpoint.y + scale.y * 0.01f);
         vertices[3] = new Vector3(startpoint.x + scale.x * 0.01f, startpoint.y);
         return vertices;
-    }*/
+    }
 
     public static void Undo()
     {
@@ -238,7 +238,7 @@ public static class StaticClass
         return plan.planGameObjects[plan.planGameObjects.Count - 1];
     }
 
-    /*public static GameObject CreateWindow(GameObject gameObjectWall, Vector3 point, Vector3 scale, Material material)
+    public static GameObject CreateWindow(GameObject gameObjectWall, Vector3 point, Vector3 scale, Material material)
     {
         Vector3 startPoint = Vector3.zero;
         var planObjectWall = gameObjectWall.GetComponent<PlanObject>() as PlanObjectSimpWall;
@@ -264,7 +264,7 @@ public static class StaticClass
         plan.currentID++;
         Debug.Log("Create Window");
         return plan.planGameObjects[plan.planGameObjects.Count - 1];
-    }*/
+    }
 
     public static GameObject CreateWindow(Vector3 startPoint, Vector3 scale, Material material)
     {
@@ -377,5 +377,5 @@ public static class StaticClass
     public static Vector3 GetScale()
     {
         return scale;
-    }
+    }*/
 }

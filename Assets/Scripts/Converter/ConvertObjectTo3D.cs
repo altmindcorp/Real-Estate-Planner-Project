@@ -13,7 +13,7 @@ public static class ConvertObjectTo3D
     //public static List<Vector3[]> wallVerticesList = new List<Vector3[]>();
     //public static List<Vector3[]> windowVerticesList = new List<Vector3[]>();
 
-    public static void GetPlanObjects()
+    /*public static void GetPlanObjects()
     {
         foreach (GameObject planGameObject in StaticClass.plan.planGameObjects)
         {
@@ -35,7 +35,7 @@ public static class ConvertObjectTo3D
     }
 
 
-    /*public static void ConvertWallsTo3D()//button
+    public static void ConvertWallsTo3D()//button
     {
         Debug.Log("Plan Game Objects: " + StaticClass.plan.planGameObjects.Count);
         foreach (Vector3[] vertices in ConvertObjectTo3D.wallVerticesList)
