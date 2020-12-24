@@ -9,9 +9,9 @@ public class Converter : MonoBehaviour
     public Material windowMaterial;
     public Material floorMaterial;
     public Material ceilingMaterial;
-
+    public GameObject PlayerContainer;
     public GameObject doorPrefab;
-    //private static float wallHeight = 2.75f;
+    //private static float wallHeight = 2.75f;  
     //private static float windowHeight = 2;
     //private static float windowPositionY = 0.6f;
     
@@ -19,6 +19,8 @@ public class Converter : MonoBehaviour
     {
         SpawnPlane();
         ConvertTo3D();
+        PlayerContainer.transform.position = new Vector3 (ObjectsDataRepository.spawnPointPosition.x, 0, ObjectsDataRepository.spawnPointPosition.y); 
+
     }
     
     private void ConvertTo3D()

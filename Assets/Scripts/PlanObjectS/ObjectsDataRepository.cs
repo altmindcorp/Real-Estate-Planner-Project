@@ -20,6 +20,6 @@ public static class ObjectsDataRepository
             Debug.LogError("No object with ID");
         }    
     }
-
+    
     
 }
