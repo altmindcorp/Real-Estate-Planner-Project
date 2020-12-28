@@ -9,8 +9,7 @@ public class PlanObjectWindow : PlanObjectWallChild
 
     public override void AddAdditionalValues()
     {
-
-        //ObjectsDataRepository.planObjectsDataList.Add(new WindowObjectData(this.meshFilter.mesh, this.orientation, this.position, this.height, this.positionHeight, this.id));
+        ObjectsDataRepository.currentSaveFile.planObjectsDataList.Add(new WindowObjectData(this.meshFilter.mesh, this.transform.position, this.orientation, this.height, this.positionHeight, this.length, this.id));
     }
 
     public override void OnMouseDown()
@@ -26,5 +25,15 @@ public class PlanObjectWindow : PlanObjectWallChild
     public void OnDestroy()
     {
         //ObjectsDataRepository.planObjectsDataList.RemoveAt(ObjectsDataRepository.planObjectsDataList.Count - 1);
+    }
+
+    public override void ReAddValues(PlanObjectData planObjData)
+    {
+        var windowData = planObjData as WindowObjectData;
+        this.orientation = windowData.orientation;
+        this.positionHeight = windowData.positionHeight;
+        this.height = windowData.height;
+        this.length = windowData.length;
+        
     }
 }

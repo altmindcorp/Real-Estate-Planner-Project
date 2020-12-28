@@ -62,6 +62,19 @@ public static class ConvertObjectTo3D
         
     }
 
+
+    /*public static Mesh CreateFloorGameObject(Vector3[] vertices)
+    {
+        Vector3[] changedVertices = ChangeDimension(vertices);
+        Mesh newMesh = new Mesh();
+        newMesh.vertices = changedVertices;
+        newMesh.triangles = mesh.triangles;
+        newMesh.uv = mesh.uv;
+
+        return newMesh;
+
+    }*/
+
     public static Mesh CreateCeiling(Mesh mesh)
     {
         Vector3[] changedVertices = ChangeDimension(mesh.vertices);
@@ -259,7 +272,7 @@ public static class ConvertObjectTo3D
         float lengthX = meshVertices[3].x - meshVertices[0].x;
         float lengthY = meshVertices[4].y - meshVertices[0].y;
         float lengthZ = meshVertices[1].z - meshVertices[0].z;
-        Debug.Log("Length: " + lengthX + " " + lengthY + " " + lengthZ);
+        //Debug.Log("Length: " + lengthX + " " + lengthY + " " + lengthZ);
 
         Vector2[] uvs = new Vector2[8];
 

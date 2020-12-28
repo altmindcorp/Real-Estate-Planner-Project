@@ -26,20 +26,21 @@ public class PlanObjectAnchor: PlanObject
         {
             
             Debug.Log("Create Wall on Anchor");
-            wallObject = Instantiate(GetPrefab(2), this.transform.position, Quaternion.identity).GetComponent<PlanObjectSimpWall>();
-            wallObject.transform.Translate(Vector3.forward * 0.0001f);
+            wallObject = Instantiate(GetPrefab(2), GameObject.Find("Plane").transform, true).GetComponent<PlanObjectSimpWall>();
+            wallObject.transform.Translate(this.transform.position + Vector3.forward * 0.0001f);
             wallObject.CreatePlanObject(this.scale);
-
             //ObjectsDataRepository.planObjectsDataList.Add(new);
         }
         
     }
 
+
+
     public override void OnMouseDrag()
     {
         
         var newMousePosition = UIController.GetUnscaledObjectPosition(-0.0003f);
-        if (wallDirection == Vector3.zero)
+        if (wallDirection == Vector3.zero && wallObject!=null)
         {
             if (newMousePosition.x > maxBounds.x - 0.009f)
             {
@@ -101,7 +102,7 @@ public class PlanObjectAnchor: PlanObject
 
     public void OnMouseUp()
     {
-        if (wallDirection == Vector3.zero)
+        if (wallDirection == Vector3.zero && wallObject != null)
         {
             wallObject.DestroyThisObject();
         }
@@ -109,44 +110,52 @@ public class PlanObjectAnchor: PlanObject
         Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit);
         if (hit.transform.name != "Anchor")
         {
-
+            Vector3 position = Vector3.zero;
             if (wallDirection == Vector3.right)
             {
-
-                var anchorObject = Instantiate(GetPrefab(1), new Vector3(wallObject.maxSpawnBounds.x, wallObject.minBounds.y, -0.0003f), Quaternion.identity).GetComponent<PlanObjectAnchor>();
-                anchorObject.CreatePlanObject();
+                position = new Vector3(wallObject.maxSpawnBounds.x, wallObject.minBounds.y, -0.0003f);
+               
             }
 
             else if (wallDirection == Vector3.left)
             {
-                var anchorObject = Instantiate(GetPrefab(1), new Vector3(wallObject.minBounds.x, wallObject.minBounds.y, -0.0003f), Quaternion.identity).GetComponent<PlanObjectAnchor>();
-                anchorObject.CreatePlanObject();
+                position = new Vector3(wallObject.minBounds.x, wallObject.minBounds.y, -0.0003f);
+
             }
 
             else if (wallDirection == Vector3.up)
             {
-                var anchorObject = Instantiate(GetPrefab(1), new Vector3(wallObject.minBounds.x, wallObject.maxSpawnBounds.y, -0.0003f), Quaternion.identity).GetComponent<PlanObjectAnchor>();
-                anchorObject.CreatePlanObject();
+                position = new Vector3(wallObject.minBounds.x, wallObject.maxSpawnBounds.y, -0.0003f);
+
             }
 
             else if (wallDirection == Vector3.down)
             {
-                var anchorObject = Instantiate(GetPrefab(1), new Vector3(wallObject.minBounds.x, wallObject.minBounds.y, -0.0003f), Quaternion.identity).GetComponent<PlanObjectAnchor>();
-                anchorObject.CreatePlanObject();
+                position = new Vector3(wallObject.minBounds.x, wallObject.minBounds.y, -0.0003f);
+
             }
+            Destroy(wallObject.GetComponent<BoxCollider>());
+            wallObject.gameObject.AddComponent<BoxCollider>();
+            var anchorObject = Instantiate(GetPrefab(1), GameObject.Find("Plane").transform, true).GetComponent<PlanObjectAnchor>();
+            anchorObject.transform.Translate(position);
+            anchorObject.CreatePlanObject();
         }
         wallDirection = Vector3.zero;
     }
-    /*new public void CreatePlanObject()
-    {
-        this.meshFilter.mesh = MeshCreator.Create2DMesh(0);
-
-    }*/
 
     public override void AddAdditionalValues()
     {
-        ObjectsDataRepository.planObjectsDataList.Add(new AnchorObjectData(this.meshFilter.mesh, this.transform.position, this.id));
         this.name = "Anchor";
         this.scale = ObjectsParams.scale;
+        ObjectsDataRepository.currentSaveFile.planObjectsDataList.Add(new AnchorObjectData(this.meshFilter.mesh, this.transform.position, this.scale, this.id));
+    }
+
+    public override void ReAddValues(PlanObjectData planObjData)
+    {
+        var planObjAnchorData = planObjData as AnchorObjectData;
+        this.scale = planObjAnchorData.scale;
+        //Debug.Log("Anchor scale: " + this.scale);
+
+        
     }
 }

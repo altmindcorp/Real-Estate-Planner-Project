@@ -17,7 +17,8 @@ public class PlanObjectSimpWall : PlanObject
         return GameObject.Find("Plane").GetComponent<Plane>().GetPrefabByIndex(id);
     }
 
-    public List<PlanObjectWallChild> planObjectWallChildsList = new List<PlanObjectWallChild>();
+    //public List<PlanObjectWallChild> planObjectWallChildsList = new List<PlanObjectWallChild>();
+    public List<int> planObjectWallChildIdList = new List<int>();
 
     public void UpdateWall(Vector3 newMousePosition, Vector3 wallDirection)
     {
@@ -91,13 +92,16 @@ public class PlanObjectSimpWall : PlanObject
                 minSpawnBounds.y += mouseChange.y;
             }
         }
+        
         this.meshFilter.mesh = MeshCreator.UpdateWall2DMesh(this.meshFilter.mesh, mouseChange, changeValue);
         this.RecalculateWorldBounds();
         //Debug.Log(this.id + " " + ObjectsDataRepository.planObjectsDataList.Count);
-        ObjectsDataRepository.ChangeMesh(this.meshFilter.mesh, this.id);
+        //ObjectsDataRepository.currentSaveFile.ChangeMesh(this.meshFilter.mesh, this.id);
         //wallObjectData = ObjectsDataRepository.planObjectsDataList[this.id] as WallObjectData;
-        wallObjectData.mesh = this.meshFilter.mesh;
+        wallObjectData.ChangeMeshProperties(this.meshFilter.mesh);
         wallObjectData.orientation = direction;
+        wallObjectData.minSpawnBounds = minSpawnBounds;
+        wallObjectData.maxSpawnBounds = maxSpawnBounds;
     }
 
     
@@ -112,13 +116,15 @@ public class PlanObjectSimpWall : PlanObject
             {
                 if (pointPosition.x > minSpawnBounds.x && pointPosition.x + ObjectsParams.windowLength < maxSpawnBounds.x)
                 {
-                    var windowPlanObject = Instantiate(GetPrefab(3), new Vector3(pointPosition.x, minBounds.y, -0.003f), Quaternion.identity).GetComponent<PlanObjectWindow>();
-                    windowPlanObject.CreatePlanObject(new Vector3(ObjectsParams.windowLength, maxBounds.y - minBounds.y));
+                    var windowPlanObject = Instantiate(GetPrefab(3), new Vector3(pointPosition.x, minBounds.y, -0.003f), Quaternion.identity, this.transform).GetComponent<PlanObjectWindow>();
                     windowPlanObject.orientation = direction;
                     windowPlanObject.length = ObjectsParams.windowLength;
                     windowPlanObject.height = ObjectsParams.windowHeight;
                     windowPlanObject.positionHeight = ObjectsParams.windowPosition;
-                    wallObjectData.wallChildObjectsDataList.Add(new WindowObjectData(windowPlanObject.meshFilter.mesh, windowPlanObject.transform.position, windowPlanObject.orientation, windowPlanObject.height, windowPlanObject.positionHeight, windowPlanObject.length, windowPlanObject.id));
+                    
+                    windowPlanObject.CreatePlanObject(new Vector3(ObjectsParams.windowLength, maxBounds.y - minBounds.y));
+                    wallObjectData.AddWallChildId(windowPlanObject.id);
+                    //wallObjectData.wallChildObjectsDataList.Add(new WindowObjectData(windowPlanObject.meshFilter.mesh, windowPlanObject.transform.position, windowPlanObject.orientation, windowPlanObject.height, windowPlanObject.positionHeight, windowPlanObject.length, windowPlanObject.id));
                 }
 
                 else
@@ -130,13 +136,15 @@ public class PlanObjectSimpWall : PlanObject
             {
                 if (pointPosition.y > minSpawnBounds.y && pointPosition.y + ObjectsParams.windowLength < maxSpawnBounds.y)
                 {
-                    var windowPlanObject = Instantiate(GetPrefab(3), new Vector3(minBounds.x, pointPosition.y, -0.003f), Quaternion.identity).GetComponent<PlanObjectWindow>();
-                    windowPlanObject.CreatePlanObject(new Vector3(maxBounds.x - minBounds.x, ObjectsParams.windowLength));
+                    var windowPlanObject = Instantiate(GetPrefab(3), new Vector3(minBounds.x, pointPosition.y, -0.003f), Quaternion.identity, this.transform).GetComponent<PlanObjectWindow>();
                     windowPlanObject.orientation = direction;
                     windowPlanObject.length = ObjectsParams.windowLength;
                     windowPlanObject.height = ObjectsParams.windowHeight;
                     windowPlanObject.positionHeight = ObjectsParams.windowPosition;
-                    wallObjectData.wallChildObjectsDataList.Add(new WindowObjectData(windowPlanObject.meshFilter.mesh, windowPlanObject.transform.position, windowPlanObject.orientation, windowPlanObject.height, windowPlanObject.positionHeight, windowPlanObject.length, windowPlanObject.id));
+
+                    windowPlanObject.CreatePlanObject(new Vector3(maxBounds.x - minBounds.x, ObjectsParams.windowLength));
+                    wallObjectData.AddWallChildId(windowPlanObject.id);
+                    //wallObjectData.wallChildObjectsDataList.Add(new WindowObjectData(windowPlanObject.meshFilter.mesh, windowPlanObject.transform.position, windowPlanObject.orientation, windowPlanObject.height, windowPlanObject.positionHeight, windowPlanObject.length, windowPlanObject.id));
                 }
             }
         }
@@ -147,22 +155,25 @@ public class PlanObjectSimpWall : PlanObject
             {
                 if (pointPosition.x > minSpawnBounds.x && pointPosition.x + ObjectsParams.doorLength < maxSpawnBounds.x)
                 {
-                    var doorPlanObject = Instantiate(GetPrefab(4), new Vector3(pointPosition.x, minBounds.y, -0.003f), Quaternion.identity).GetComponent<PlanObjectDoor>();
+                    var doorPlanObject = Instantiate(GetPrefab(4), new Vector3(pointPosition.x, minBounds.y, -0.003f), Quaternion.identity, this.transform).GetComponent<PlanObjectDoor>();
                     doorPlanObject.CreatePlanObject(new Vector3(ObjectsParams.doorLength, maxBounds.y - minBounds.y));
                     doorPlanObject.orientation = direction;
                     doorPlanObject.length = ObjectsParams.doorLength;
-                    wallObjectData.wallChildObjectsDataList.Add(new DoorObjectData(doorPlanObject.meshFilter.mesh, doorPlanObject.transform.position, doorPlanObject.orientation,doorPlanObject.length, doorPlanObject.id));
+
+                    wallObjectData.AddWallChildId(doorPlanObject.id);
+                    //wallObjectData.wallChildObjectsDataList.Add(new DoorObjectData(doorPlanObject.meshFilter.mesh, doorPlanObject.transform.position, doorPlanObject.orientation,doorPlanObject.length, doorPlanObject.id));
                 }
             }
             else if (direction == Vector3.up || direction == Vector3.down)
             {
                 if (pointPosition.y > minSpawnBounds.y && pointPosition.y + ObjectsParams.doorLength < maxSpawnBounds.y)
                 {
-                    var doorPlanObject = Instantiate(GetPrefab(4), new Vector3(minBounds.x, pointPosition.y, -0.003f), Quaternion.identity).GetComponent<PlanObjectDoor>();
-                    doorPlanObject.CreatePlanObject(new Vector3(maxBounds.x - minBounds.x, ObjectsParams.doorLength));
+                    var doorPlanObject = Instantiate(GetPrefab(4), new Vector3(minBounds.x, pointPosition.y, -0.003f), Quaternion.identity, this.transform).GetComponent<PlanObjectDoor>();
                     doorPlanObject.orientation = direction;
                     doorPlanObject.length = ObjectsParams.doorLength;
-                    wallObjectData.wallChildObjectsDataList.Add(new DoorObjectData(doorPlanObject.meshFilter.mesh, doorPlanObject.transform.position, doorPlanObject.orientation, doorPlanObject.length, doorPlanObject.id));
+                    doorPlanObject.CreatePlanObject(new Vector3(maxBounds.x - minBounds.x, ObjectsParams.doorLength));
+                    wallObjectData.AddWallChildId(doorPlanObject.id);
+                    //wallObjectData.wallChildObjectsDataList.Add(new DoorObjectData(doorPlanObject.meshFilter.mesh, doorPlanObject.transform.position, doorPlanObject.orientation, doorPlanObject.length, doorPlanObject.id));
                 }
             }
         }
@@ -176,13 +187,25 @@ public class PlanObjectSimpWall : PlanObject
     public override void AddAdditionalValues()
     {
         direction = Vector3.zero;
-        wallObjectData = new WallObjectData(this.meshFilter.mesh, this.transform.position, this.id, ObjectsParams.wallHeight);
         this.name = "Simple Wall";
-        ObjectsDataRepository.planObjectsDataList.Add(wallObjectData);
+        this.height = ObjectsParams.wallHeight;
+        wallObjectData = new WallObjectData(this.meshFilter.mesh, this.transform.position, this.direction, this.minSpawnBounds, this.maxSpawnBounds, this.height, this.id);
+        ObjectsDataRepository.currentSaveFile.planObjectsDataList.Add(wallObjectData);
     }
 
     public void OnDestroy()
     {
         //ObjectsDataRepository.planObjectsDataList.RemoveAt(ObjectsDataRepository.planObjectsDataList.Count-1);
+    }
+
+    public override void ReAddValues(PlanObjectData planObjData)
+    {
+        var wallObjData = planObjData as WallObjectData;
+        
+        this.direction = wallObjData.orientation;
+        this.height = wallObjData.height;
+        this.planObjectWallChildIdList = wallObjData.wallChildsIdList;
+        this.minSpawnBounds = wallObjData.minSpawnBounds;
+        this.maxSpawnBounds = wallObjData.maxSpawnBounds;
     }
 }

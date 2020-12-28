@@ -7,11 +7,6 @@ public class PlanObjectDoor : PlanObjectWallChild
 {
     public float topHeight;
 
-    public override void AddAdditionalValues()
-    {
-        //throw new System.NotImplementedException();
-    }
-
     public override void OnMouseDown()
     {
         //throw new System.NotImplementedException();
@@ -24,8 +19,16 @@ public class PlanObjectDoor : PlanObjectWallChild
 
     public void OnDestroy()
     {
-        ObjectsDataRepository.planObjectsDataList.RemoveAll(x => x.id == this.id);
+        //ObjectsDataRepository.currentSaveFile.planObjectsDataList.RemoveAll(x => x.id == this.id);
     }
 
+    public override void AddAdditionalValues()
+    {
+        
+    }
 
+    public override void ReAddValues(PlanObjectData planObjData)
+    {
+        
+    }
 }

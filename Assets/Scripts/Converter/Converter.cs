@@ -11,29 +11,32 @@ public class Converter : MonoBehaviour
     public Material ceilingMaterial;
 
     public GameObject doorPrefab;
+
+    List<WallChildObjectData> wallChildObjectDataList = new List<WallChildObjectData>();
     //private static float wallHeight = 2.75f;
     //private static float windowHeight = 2;
     //private static float windowPositionY = 0.6f;
-    
+
     private void Awake()
     {
         SpawnPlane();
         ConvertTo3D();
+        
     }
     
     private void ConvertTo3D()
     {
-        Debug.Log("Count: " + ObjectsDataRepository.planObjectsDataList.Count);
-        foreach (PlanObjectData objData in ObjectsDataRepository.planObjectsDataList)
+        Debug.Log("Count: " + ObjectsDataRepository.currentSaveFile.planObjectsDataList.Count);
+        foreach (PlanObjectData objData in ObjectsDataRepository.currentSaveFile.planObjectsDataList)
         {
             ConvertObject(objData);
         }
 
-
-        foreach (Floor floorObject in ConvertObjectTo3D.floorObjectsList)
+        Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube), new Vector3(ObjectsDataRepository.currentSaveFile.spawnPosition.x, 0, ObjectsDataRepository.currentSaveFile.spawnPosition.y), Quaternion.identity);
+        /*foreach (Floor floorObject in ConvertObjectTo3D.floorObjectsList)
         {
             CreateFloor(floorObject);
-        }
+        }*/
     }
 
     
@@ -42,20 +45,20 @@ public class Converter : MonoBehaviour
     {
         Vector3[] objectVertices = new Vector3[4];
         Vector3 direction = planObjWallData.orientation;
-        Vector3[] wallVertices = planObjWallData.mesh.vertices;
+        Vector3[] wallVertices = planObjWallData.GetVertices();
 
         if (direction == Vector3.right || direction == Vector3.left)
-        {
+        { 
+            wallChildObjectDataList.Sort(PlanObjectObjectComparer.SortByX);
             
-            planObjWallData.wallChildObjectsDataList.Sort(PlanObjectObjectComparer.SortByX);
-            
-            var sortedWindows = from obj in planObjWallData.wallChildObjectsDataList
+            var sortedWindows = from obj in wallChildObjectDataList
                                 orderby obj.position.x
                                 select obj;
+
             WallChildObjectData[] objectsArray = sortedWindows.ToArray();
-            var wallWidth = planObjWallData.mesh.vertices[2].y;
-            objectVertices[1] = planObjWallData.mesh.vertices[1];
-            objectVertices[0] = planObjWallData.mesh.vertices[0];
+            var wallWidth = planObjWallData.GetVertices()[2].y;
+            objectVertices[1] = planObjWallData.GetVertices()[1];
+            objectVertices[0] = planObjWallData.GetVertices()[0];
 
             Vector3 wallPosition = planObjWallData.position;
             Vector3 windowPosition = Vector3.zero;
@@ -72,10 +75,10 @@ public class Converter : MonoBehaviour
 
                 CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(objectVertices, planObjWallData.height), wallMaterial, wallPosition, "Divided Wall");//wall
 
-                
 
-                objectVertices[0] = objectsArray[i].mesh.vertices[0];
-                objectVertices[1] = objectsArray[i].mesh.vertices[1];
+                
+                objectVertices[0] = objectsArray[i].GetVertices()[0];
+                objectVertices[1] = objectsArray[i].GetVertices()[1];
 
                 objectVertices[2].x = objectVertices[1].x + windowLength;
                 objectVertices[3].x = objectVertices[0].x + windowLength;
@@ -104,23 +107,23 @@ public class Converter : MonoBehaviour
 
             wallPosition.x = windowPosition.x + windowLength;
 
-            objectVertices[2].x = planObjWallData.position.x + planObjWallData.mesh.vertices[2].x - (windowPosition.x + windowLength);
-            objectVertices[3].x = planObjWallData.position.x + planObjWallData.mesh.vertices[3].x - (windowPosition.x + windowLength);
+            objectVertices[2].x = planObjWallData.position.x + planObjWallData.GetVertices()[2].x - (windowPosition.x + windowLength);
+            objectVertices[3].x = planObjWallData.position.x + planObjWallData.GetVertices()[3].x - (windowPosition.x + windowLength);
 
             CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(objectVertices, planObjWallData.height), wallMaterial, wallPosition, "Simple Wall");
         }
 
         else if (direction == Vector3.up || direction == Vector3.down)
         {
-            planObjWallData.wallChildObjectsDataList.Sort(PlanObjectObjectComparer.SortByX);
+            wallChildObjectDataList.Sort(PlanObjectObjectComparer.SortByY);
 
-            var sortedWindows = from obj in planObjWallData.wallChildObjectsDataList
+            var sortedWindows = from obj in wallChildObjectDataList
                                 orderby obj.position.y
                                 select obj;
             WallChildObjectData[] objectsArray = sortedWindows.ToArray();
-            var wallWidth = planObjWallData.mesh.vertices[2].x;
-            objectVertices[0] = planObjWallData.mesh.vertices[0];
-            objectVertices[3] = planObjWallData.mesh.vertices[3];
+            var wallWidth = planObjWallData.GetVertices()[2].x;
+            objectVertices[0] = planObjWallData.GetVertices()[0];
+            objectVertices[3] = planObjWallData.GetVertices()[3];
 
             Vector3 wallPosition = planObjWallData.position;
             Vector3 windowPosition = Vector3.zero;
@@ -139,8 +142,8 @@ public class Converter : MonoBehaviour
 
 
 
-                objectVertices[0] = objectsArray[i].mesh.vertices[0];
-                objectVertices[3] = objectsArray[i].mesh.vertices[3];
+                objectVertices[0] = objectsArray[i].GetVertices()[0];
+                objectVertices[3] = objectsArray[i].GetVertices()[3];
 
                 objectVertices[1].y = objectVertices[0].y + windowLength;
                 objectVertices[2].y = objectVertices[3].y + windowLength;
@@ -168,8 +171,8 @@ public class Converter : MonoBehaviour
 
             wallPosition.y = windowPosition.y + windowLength;
 
-            objectVertices[1].y = planObjWallData.position.y + planObjWallData.mesh.vertices[1].y - (windowPosition.y + windowLength);
-            objectVertices[2].y = planObjWallData.position.y + planObjWallData.mesh.vertices[2].y - (windowPosition.y + windowLength);
+            objectVertices[1].y = planObjWallData.position.y + planObjWallData.GetVertices()[1].y - (windowPosition.y + windowLength);
+            objectVertices[2].y = planObjWallData.position.y + planObjWallData.GetVertices()[2].y - (windowPosition.y + windowLength);
 
             CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(objectVertices, planObjWallData.height), wallMaterial, wallPosition, "Simple Wall");
         }
@@ -206,29 +209,34 @@ public class Converter : MonoBehaviour
 
     }
 
-    private void ConvertObject(PlanObjectData planObj)
+    private void ConvertObject(PlanObjectData planObjData)
     {
-        if (planObj is WallObjectData)
+        if (planObjData is WallObjectData)
         {
-            var wallPlanObjData = planObj as WallObjectData;
-            
-            if (wallPlanObjData.wallChildObjectsDataList.Count!=0)
+            wallChildObjectDataList.Clear();
+            var wallPlanObjData = planObjData as WallObjectData;
+            foreach (int id in wallPlanObjData.wallChildsIdList)
+            {
+                wallChildObjectDataList.Add((WallChildObjectData)ObjectsDataRepository.currentSaveFile.planObjectsDataList.Find(x => x.id == id));
+            }
+
+            if (wallChildObjectDataList.Count!=0)
             {                
                 CreateWallWithObjects(wallPlanObjData);
             }
 
             else
             {
-                CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(planObj.mesh, 2.75f), wallMaterial, planObj.position, "Simple Wall");
+                CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(planObjData.GetVertices(), 2.75f), wallMaterial, planObjData.position, "Simple Wall");
             }
             
         }
 
-        else if (planObj is FloorObjectData)
+        else if (planObjData is FloorObjectData)
         {
-            CreateGameObject(ConvertObjectTo3D.CreateFloorGameObject(planObj.mesh), floorMaterial, planObj.position, "Floor");
-            CreateGameObject(ConvertObjectTo3D.CreateCeiling(planObj.mesh), ceilingMaterial, planObj.position, 2.75f, "Ceiling");
-            Debug.Log("Floor Position: " + planObj.position);
+            CreateGameObject(ConvertObjectTo3D.CreateFloorGameObject(planObjData.GetMesh()), floorMaterial, planObjData.position, "Floor");
+            CreateGameObject(ConvertObjectTo3D.CreateCeiling(planObjData.GetMesh()), ceilingMaterial, planObjData.position, 2.75f, "Ceiling");
+            Debug.Log("Floor Position: " + planObjData.position);
         }
     }
 

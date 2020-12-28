@@ -7,7 +7,50 @@ public static class MeshCreator
 
     //public static Vector3 scale = new Vector3(3, 3, 0);
 
+    public static Mesh GetGridMesh(float borderWidth)
+    {
+        Vector3[] vertices = new Vector3[8];
+        int[] triangles = new int[24];
+        Vector2[] uvs = new Vector2[8];
 
+        vertices[0] = new Vector3(0, 0, 0);
+        vertices[1] = new Vector3(0, 1, 0);
+        vertices[2] = new Vector3(1, 1, 0);
+        vertices[3] = new Vector3(1, 0, 0);
+
+        //inner
+        vertices[4] = new Vector3(borderWidth / 2, borderWidth / 2, 0);
+        vertices[5] = new Vector3(borderWidth / 2, 1 - borderWidth / 2, 0);
+        vertices[6] = new Vector3(1 - borderWidth / 2, 1 - borderWidth / 2, 0);
+        vertices[7] = new Vector3(1 - borderWidth / 2, borderWidth / 2, 0);
+
+        for (int i = 0; i < 3; i++)
+        {
+            triangles[0 + i * 6] = 0 + i;
+            triangles[1 + i * 6] = 1 + i;
+            triangles[2 + i * 6] = 4 + i;
+
+            triangles[3 + i * 6] = 1 + i;
+            triangles[4 + i * 6] = 5 + i;
+            triangles[5 + i * 6] = 4 + i;
+        }
+
+        triangles[18] = 3;
+        triangles[19] = 0;
+        triangles[20] = 7;
+
+        triangles[21] = 0;
+        triangles[22] = 4;
+        triangles[23] = 7;
+
+        Mesh mesh = new Mesh();
+
+        mesh.vertices = vertices;
+        mesh.uv = uvs;
+        mesh.triangles = triangles;
+
+        return mesh;
+    }
     public static Mesh Create2DMesh(Vector3 scale, float zDepth)
     {
         Vector3[] vertices = new Vector3[4];

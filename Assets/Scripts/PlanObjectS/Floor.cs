@@ -5,32 +5,17 @@ using UnityEngine;
 public class Floor : PlanObject
 {
     public List<Vector3> vertices = new List<Vector3>();
-
-
-    //public Material material;
-    //public MeshRenderer meshRenderer;
-    //public MeshFilter meshFilter;
-    //public MeshCollider meshCollider;
+    FloorObjectData floorData;
     private Vector3 initialScale;
-    private Vector3 startPoint;
     public FloorAnchor anchorPrefab;
+    public float floorArea = 0;
+    public List<Vector3> anchorsPosition = new List<Vector3>();
 
-    public void SetFloor(Vector3 startPoint, Material material)
-    {
-        if (meshFilter == null)
-        {
-            Debug.LogError("Mesh is null");
-        }
-        this.startPoint = startPoint;
-        //SetStartMeshParameters();
-        //SetMaterial(material);
-        //AddToPlanList();
-    }
-
-    /*public void UpdateFloor(int mode, Vector3 mousePosition)
+    public void UpdateFloor(int mode, Vector3 mousePosition)
     {
         if (mode == 0)
         {
+            
             if (mousePosition.x > meshFilter.mesh.bounds.max.x)
             {
                 Vector3 newVertice2 = new Vector3(vertices[2].x + GridScaler.scaleValue,vertices[2].y, vertices[2].z);
@@ -72,70 +57,9 @@ public class Floor : PlanObject
         meshFilter.mesh.vertices = vertices.ToArray();
         meshCollider.sharedMesh = meshFilter.mesh;
         meshFilter.mesh.RecalculateBounds();
-
+        floorData.ChangeMeshProperties(this.meshFilter.mesh);
+        floorData.anchorVertices = this.anchorsPosition.ToArray();
     }
-    private void SetVertices()
-    {
-
-    }
-
-    private void AddVertices()
-    {
-
-    }
-
-    private void AddToPlanList()
-    {
-        StaticClass.plan.planGameObjects.Add(this.gameObject);
-    }
-
-    private Vector3[] GetStartVertices()
-    {
-
-        Vector3 vertice0 = new Vector3((int)(startPoint.x / GridScaler.scaleValue) * GridScaler.scaleValue, (int)(startPoint.y / GridScaler.scaleValue) * GridScaler.scaleValue, -0.02f);
-        Vector3 vertice1 = new Vector3((int)(startPoint.x / GridScaler.scaleValue) * GridScaler.scaleValue, (int)(startPoint.y / GridScaler.scaleValue) * GridScaler.scaleValue + GridScaler.scaleValue, -0.02f);
-        Vector3 vertice2 = new Vector3((int)(startPoint.x / GridScaler.scaleValue) * GridScaler.scaleValue + GridScaler.scaleValue, (int)(startPoint.y / GridScaler.scaleValue) * GridScaler.scaleValue + GridScaler.scaleValue, -0.02f);
-        Vector3 vertice3 = new Vector3((int)(startPoint.x / GridScaler.scaleValue) * GridScaler.scaleValue + GridScaler.scaleValue, (int)(startPoint.y / GridScaler.scaleValue) * GridScaler.scaleValue, -0.02f);
-
-        vertices.Add(vertice0);
-        vertices.Add(vertice1);
-        vertices.Add(vertice2);
-        vertices.Add(vertice3);
-        return vertices.ToArray();
-    }
-
-    private Vector2[] SetUVs()
-    {
-        Vector2[] newUVs = new Vector2[4];
-        newUVs[0] = new Vector2(0, 0);
-        newUVs[1] = new Vector2(0, 1);
-        newUVs[2] = new Vector2(1, 1);
-        newUVs[3] = new Vector2(1, 0);
-        return newUVs;
-    }
-
-    private int[] SetTriangles()
-    {
-        int[] newTriangles = new int[] { 0, 1, 2, 0, 2, 3 };
-        return newTriangles;
-    }
-
-    private void SetMaterial(Material material)
-    {
-        meshRenderer.material = material;
-    }
-
-    private void SetStartMeshParameters()
-    {
-        Mesh newMesh = new Mesh();
-        newMesh.vertices = GetStartVertices();
-        newMesh.uv = SetUVs();
-        newMesh.triangles = SetTriangles();
-        meshFilter.mesh = newMesh;
-        meshCollider.sharedMesh = meshFilter.mesh;
-        Debug.Log(meshCollider.bounds);
-        meshFilter.mesh.RecalculateBounds();
-    }*/
 
     new public void CreatePlanObject()
     {
@@ -146,36 +70,72 @@ public class Floor : PlanObject
 
     public override void OnMouseDown()
     {
-        //CreatePlanObject();
+        ObjectsDataRepository.currentFloorArea = GetFloorArea(this.meshFilter.mesh.vertices);
     }
 
-    public override void AddAdditionalValues()
+    private void AddAnchors()
     {
-        initialScale = new Vector3 (1,1,0);
-
         FloorAnchor anchor;
         anchor = Instantiate(anchorPrefab, this.transform, false);
         anchor.transform.Translate(new Vector3(0.05f, 0.05f, -0.0001f), Space.World);
         anchor.verticeNumber = 0;
         anchor.floor = this;
+        anchorsPosition.Add(anchor.transform.position);
 
         anchor = Instantiate(anchorPrefab, this.transform, false);
-        anchor.transform.Translate(new Vector3(0.05f, -0.05f + 1, -0.001f), Space.World);
+        anchor.transform.Translate(new Vector3(0.05f, -0.05f + 1, -0.0001f), Space.World);
         anchor.verticeNumber = 1;
         anchor.floor = this;
+        anchorsPosition.Add(anchor.transform.position);
 
         anchor = Instantiate(anchorPrefab, this.transform, false);
-        anchor.transform.Translate(new Vector3(-0.05f + 1, -0.05f + 1, -0.001f), Space.World);
+        anchor.transform.Translate(new Vector3(-0.05f + 1, -0.05f + 1, -0.0001f), Space.World);
         anchor.verticeNumber = 2;
         anchor.floor = this;
+        anchorsPosition.Add(anchor.transform.position);
 
         anchor = Instantiate(anchorPrefab, this.transform, false);
-        anchor.transform.Translate(new Vector3(-0.05f + 1, 0.05f, -0.001f), Space.World);
+        anchor.transform.Translate(new Vector3(-0.05f + 1, 0.05f, -0.0001f), Space.World);
         anchor.verticeNumber = 3;
         anchor.floor = this;
+        anchorsPosition.Add(anchor.transform.position);
+    }
 
-        FloorObjectData floorData = new FloorObjectData(this.meshFilter.mesh, this.meshRenderer.material, this.transform.position, this.id);
-        ObjectsDataRepository.planObjectsDataList.Add(floorData);
+    private void ReAddAnchors()
+    {
+        FloorAnchor anchor;
+        anchor = Instantiate(anchorPrefab, this.transform, false);
+        anchor.verticeNumber = 0;
+        anchor.floor = this;
+        anchor.transform.position = anchorsPosition[0];
+        Debug.Log("Floor Anchor Position: " + anchorsPosition[0]);
+
+        anchor = Instantiate(anchorPrefab, this.transform, false);
+        anchor.verticeNumber = 1;
+        anchor.floor = this;
+        anchor.transform.position = anchorsPosition[1];
+        Debug.Log("Floor Anchor Position: " + anchorsPosition[1]);
+
+        anchor = Instantiate(anchorPrefab, this.transform, false);
+        anchor.verticeNumber = 2;
+        anchor.floor = this;
+        anchor.transform.position = anchorsPosition[2];
+        Debug.Log("Floor Anchor Position: " + anchorsPosition[2]);
+
+        anchor = Instantiate(anchorPrefab, this.transform, false);
+        anchor.verticeNumber = 3;
+        anchor.floor = this;
+        anchor.transform.position = anchorsPosition[3];
+        Debug.Log("Floor Anchor Position: " + anchorsPosition[3]);
+    }
+    public override void AddAdditionalValues()
+    {
+        initialScale = new Vector3 (1,1,0);
+
+        AddAnchors();
+        SetFloorArea();
+        floorData = new FloorObjectData(this.meshFilter.mesh, this.transform.position, this.anchorsPosition.ToArray(), this.initialScale, this.id);
+        ObjectsDataRepository.currentSaveFile.planObjectsDataList.Add(floorData);
     }
 
     public override void OnMouseDrag()
@@ -186,6 +146,44 @@ public class Floor : PlanObject
     public void ChangeVerticePosition(int verticeNumber, Vector3 positionChange)
     {
         this.meshFilter.mesh = MeshCreator.ChangeFloorMesh(this.meshFilter.mesh, verticeNumber, positionChange, initialScale);
-        ObjectsDataRepository.ChangeMesh(this.meshFilter.mesh, this.id);
+        ObjectsDataRepository.currentSaveFile.planObjectsDataList.Find(x => x.id == this.id).ChangeMeshProperties(this.meshFilter.mesh);
+        
+    }
+
+    public void ChangeFloorDataAnchorPosition(Vector3 position, int anchorNumber)
+    {
+        floorData.anchorVertices[anchorNumber] = position;
+    }
+
+    public override void ReAddValues(PlanObjectData planObjData)
+    {
+        floorData = planObjData as FloorObjectData;
+        anchorsPosition.Clear();
+        foreach (Vector3 v in floorData.anchorVertices)
+        {
+            anchorsPosition.Add(v);
+            Debug.Log("Floor Anchor Position: " + v);
+        }
+        ReAddAnchors();
+        this.initialScale = floorData.initialScale;
+        SetFloorArea();
+    }
+
+    private float GetFloorArea(Vector3[] vertices)
+    {
+        var length = vertices.Length;
+        float floorArea = 0;
+        for (int i = 0; i < length-1; i++)
+        {
+            floorArea += vertices[i].x * vertices[i + 1].y - vertices[i + 1].x * vertices[i].y;
+        }
+
+        floorArea += vertices[length - 1].x * vertices[0].y - vertices[0].x * vertices[length - 1].y;
+        return Mathf.Abs(floorArea) / 2;
+    }
+
+    public void SetFloorArea()
+    {
+        ObjectsDataRepository.currentFloorArea = GetFloorArea(meshFilter.mesh.vertices);
     }
 }

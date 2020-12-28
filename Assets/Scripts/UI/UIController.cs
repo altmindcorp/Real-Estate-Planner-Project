@@ -31,13 +31,15 @@ public class UIController : MonoBehaviour
     public Button resetSpawnPointButton;
     public TMP_Dropdown objectTypeDropdown;
     public TMP_Dropdown modeTypeDropdown;
+    public float currentFloorArea = 0;
+
     // Start is called before the first frame update
     void Start()
     {
         objectTypeDropdown.value = 0;
         modeTypeDropdown.value = 0;
         resetSpawnPointButton.gameObject.SetActive(false);
-        ChangeActiveText(topText, true, false, "Floor Area: ", "");
+        //ObjectsDataRepository.currentFloorArea.ToString(), "");
         ChangeActiveText(middleText, false, false, "", "");
         ChangeActiveText(bottomText, false, false, "", "");
     }
@@ -45,7 +47,11 @@ public class UIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (objectTypeMode == 0)
+        {
+            var text = ObjectsDataRepository.currentFloorArea == 0 ? "Floor not selected" : ObjectsDataRepository.currentFloorArea.ToString();
+            ChangeActiveText(topText, true, false, "Floor Area: " + text, "");
+        }
     }
 
     public void ChangeObjectType(TMP_Dropdown dropdown)
@@ -78,7 +84,7 @@ public class UIController : MonoBehaviour
 
         else if (dropdown.value == 0)//floor
         {
-            ChangeActiveText(topText, true, false, "Floor Area: ", "");
+            ChangeActiveText(topText, true, false, "Floor Area: " + ObjectsDataRepository.currentFloorArea == 0.ToString() ? "Floor not selected" : ObjectsDataRepository.currentFloorArea.ToString(), "");
             ChangeActiveText(middleText, false, false, "", "");
             ChangeActiveText(bottomText, false, false, "", "");
             resetSpawnPointButton.gameObject.SetActive(false);
@@ -171,8 +177,8 @@ public class UIController : MonoBehaviour
 
     public void ResetSpawnPoint()
     {
-        ObjectsParams.spawnPointPosition = Vector3.zero;
-        ObjectsParams.spawnPointIsSet = false;
+        ObjectsDataRepository.currentSaveFile.spawnPosition = Vector3.zero;
+        ObjectsDataRepository.currentSaveFile.spawnPositionIsSet = false;
         Destroy(GameObject.Find("Spawn Point(Clone)"));
     }
 }

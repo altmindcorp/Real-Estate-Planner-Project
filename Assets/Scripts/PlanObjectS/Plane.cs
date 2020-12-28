@@ -17,7 +17,8 @@ public class Plane : MonoBehaviour, ISpawner
             {
                 if (prefabs[0] != null)
                 {
-                    var floorObject = Instantiate(prefabs[0], UIController.GetScaledObjectPosition(-0.0001f), Quaternion.identity).GetComponent<Floor>();
+                    var floorObject = Instantiate(prefabs[0], transform, true).GetComponent<Floor>();
+                    floorObject.transform.position = UIController.GetScaledObjectPosition(-0.0001f);
                     floorObject.CreatePlanObject(new Vector3(1, 1, 0));
                     
                 }
@@ -27,7 +28,8 @@ public class Plane : MonoBehaviour, ISpawner
             {
                 if (prefabs[1] != null)
                 {
-                    var anchorObject = Instantiate(prefabs[1], UIController.GetScaledObjectPosition(-0.0003f), Quaternion.identity).GetComponent<PlanObjectAnchor>();
+                    var anchorObject = Instantiate(prefabs[1], transform, true).GetComponent<PlanObjectAnchor>();
+                    anchorObject.transform.position = UIController.GetScaledObjectPosition(-0.0003f);
                     anchorObject.CreatePlanObject(ObjectsParams.scale);
                     
                 }
@@ -35,10 +37,13 @@ public class Plane : MonoBehaviour, ISpawner
 
             else if (UIController.objectTypeMode == 4)//spawn point
             {
-                if (prefabs[5] != null && !spawnSet)
+                if (prefabs[5] != null && !ObjectsDataRepository.currentSaveFile.spawnPositionIsSet)
                 {
-                    ObjectsDataRepository.spawnPointPosition = Instantiate(prefabs[5], UIController.GetScaledObjectPosition(-0.0002f) + new Vector3(0.5f, 0.5f, 0), Quaternion.Euler(Vector3.left * 90)).transform.position;
-                    ObjectsParams.spawnPointIsSet = true;
+                    GameObject spawnPosition = Instantiate(prefabs[5], transform, true);
+                    spawnPosition.transform.position = UIController.GetScaledObjectPosition(-0.0002f) + new Vector3(0.5f, 0.5f, 0);
+                    //ObjectsDataRepository.currentSaveFile.spawnPosition = spawnPosition.transform.position;                   
+                    ObjectsDataRepository.currentSaveFile.spawnPositionIsSet = true;
+                    ObjectsDataRepository.currentSaveFile.spawnPosition = spawnPosition.transform.position;
                 }
             }
         }       
@@ -52,5 +57,64 @@ public class Plane : MonoBehaviour, ISpawner
     public void OnMouseDrag()
     {
         //throw new System.NotImplementedException();
+    }
+
+    public void ResetCurrentPlan()
+    {
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
+    public void RecreateObjects()
+    {
+        foreach (PlanObjectData planObjData in ObjectsDataRepository.currentSaveFile.planObjectsDataList)
+        {
+            if (planObjData is AnchorObjectData)
+            {
+                var anchorObject = Instantiate(prefabs[1], this.transform, true).GetComponent<PlanObjectAnchor>();
+                anchorObject.transform.Translate(planObjData.position);
+                anchorObject.RecreatePlanObject(planObjData);
+            }
+
+            if (planObjData is WallObjectData)
+            {
+                var wallObjectData = planObjData as WallObjectData;
+                var wallObject = Instantiate(prefabs[2], this.transform, true).GetComponent<PlanObjectSimpWall>();
+                wallObject.transform.Translate(planObjData.position);
+                wallObject.RecreatePlanObject(planObjData);
+                if (wallObjectData.wallChildsIdList.Count != 0)
+                {
+                    foreach (int id in wallObjectData.wallChildsIdList)
+                    {
+                        var objData = ObjectsDataRepository.currentSaveFile.planObjectsDataList.Find(x => x.id == id);
+                        if (objData is WindowObjectData)
+                        {
+                            var windowObject = Instantiate(prefabs[3], objData.position, Quaternion.identity, wallObject.transform).GetComponent<PlanObjectWindow>();
+                            windowObject.RecreatePlanObject(objData);
+                        }
+
+                        if (objData is DoorObjectData)
+                        {
+                            var doorObject = Instantiate(prefabs[4], objData.position, Quaternion.identity, wallObject.transform).GetComponent<PlanObjectDoor>();
+                            doorObject.RecreatePlanObject(objData);
+                        }
+                    }
+                    
+                }
+            }
+
+            if (planObjData is FloorObjectData)
+            {
+                var floorObject = Instantiate(prefabs[0], this.transform, true).GetComponent<Floor>();
+                floorObject.transform.Translate(planObjData.position);
+                floorObject.RecreatePlanObject(planObjData);
+            }
+        }
+        if (ObjectsDataRepository.currentSaveFile.spawnPositionIsSet)
+        {
+            Instantiate(prefabs[5], transform, true).transform.position = ObjectsDataRepository.currentSaveFile.spawnPosition;
+        }
     }
 }

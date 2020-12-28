@@ -25,7 +25,7 @@ public class FloorAnchor : MonoBehaviour
             var changePosition = UIController.GetUnscaledObjectPosition(-0.0002f) - startMousePosition;
             floor.ChangeVerticePosition(verticeNumber, changePosition);
             this.transform.Translate(changePosition, Space.World);
-            startMousePosition = UIController.GetUnscaledObjectPosition(-0.0002f);
+            startMousePosition = UIController.GetUnscaledObjectPosition(-0.0002f);           
         }
     }
 
@@ -39,6 +39,8 @@ public class FloorAnchor : MonoBehaviour
     //End Move
     private void OnMouseUp()
     {
-        
+        floor.anchorsPosition[this.verticeNumber] = this.transform.position;
+        floor.ChangeFloorDataAnchorPosition(this.transform.position, this.verticeNumber);
+        floor.SetFloorArea();
     }
 }

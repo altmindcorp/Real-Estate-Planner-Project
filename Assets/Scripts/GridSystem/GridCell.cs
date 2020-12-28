@@ -11,13 +11,15 @@ public class GridCell : MonoBehaviour
     private Vector2[] uvs = new Vector2[8];
     private int[] triangles = new int[24];
 
-    private Mesh mesh;
-    private MeshRenderer meshRenderer;
+    public MeshFilter meshFilter;
+    public MeshRenderer meshRenderer;
 
     private void Start()
     {
+        meshFilter = GetComponent<MeshFilter>();
+        meshRenderer = GetComponent<MeshRenderer>();
         borderWidth = 0.1f;
-        mesh = gameObject.GetComponent<MeshFilter>().mesh;
+        meshFilter.mesh = gameObject.GetComponent<MeshFilter>().mesh;
         meshRenderer = gameObject.GetComponent<MeshRenderer>();
         SetupCell();
         ScaleCell(GridScaler.scaleValue);
@@ -59,9 +61,14 @@ public class GridCell : MonoBehaviour
         triangles[22] = 4;
         triangles[23] = 7;
 
-        mesh.vertices = vertices;
-        mesh.uv = uvs;
-        mesh.triangles = triangles;
+        meshFilter.mesh.vertices = vertices;
+        meshFilter.mesh.uv = uvs;
+        meshFilter.mesh.triangles = triangles;
+    }
+
+    public Mesh GetCellMesh()
+    {
+        return meshFilter.mesh;
     }
 
     public void ScaleCell(float scale)
@@ -70,7 +77,7 @@ public class GridCell : MonoBehaviour
         {
             vertices[i] *= scale;
         }
-        mesh.vertices = vertices;
+        meshFilter.mesh.vertices = vertices;
     }
     //Position Cell (float positionX, PositionY)
     //this position = position
