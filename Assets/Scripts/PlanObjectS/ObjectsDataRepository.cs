@@ -10,7 +10,6 @@ public static class ObjectsDataRepository
 {
 
     public static float currentFloorArea = 0;
-    public static int currentID;
     public static SaveFile currentSaveFile = new SaveFile();
     public static List<string> saveFilesNames = new List<string>();
 

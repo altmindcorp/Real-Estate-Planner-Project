@@ -20,8 +20,8 @@ public class Converter : MonoBehaviour
     {
         SpawnPlane();
         ConvertTo3D();
-        PlayerContainer.transform.position = new Vector3 (ObjectsDataRepository.spawnPointPosition.x, 1, ObjectsDataRepository.spawnPointPosition.y);
-        _ = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        PlayerContainer.transform.position = new Vector3 (ObjectsDataRepository.currentSaveFile.spawnPosition.x, 1, ObjectsDataRepository.currentSaveFile.spawnPosition.y);
+        //_ = GameObject.CreatePrimitive(PrimitiveType.Cube);
     }
     
     private void ConvertTo3D()
@@ -32,7 +32,7 @@ public class Converter : MonoBehaviour
             ConvertObject(objData);
         }
 
-        Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube), new Vector3(ObjectsDataRepository.currentSaveFile.spawnPosition.x, 0, ObjectsDataRepository.currentSaveFile.spawnPosition.y), Quaternion.identity);
+        //Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube), new Vector3(ObjectsDataRepository.currentSaveFile.spawnPosition.x, 0, ObjectsDataRepository.currentSaveFile.spawnPosition.y), Quaternion.identity);
         /*foreach (Floor floorObject in ConvertObjectTo3D.floorObjectsList)
         {
             CreateFloor(floorObject);
