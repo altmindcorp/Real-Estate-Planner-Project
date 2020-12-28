@@ -8,10 +8,17 @@ using System.Linq;
 
 public static class ObjectsDataRepository
 {
+
     public static float currentFloorArea = 0;
     public static int currentID;
     public static SaveFile currentSaveFile = new SaveFile();
     public static List<string> saveFilesNames = new List<string>();
+
+    public static Vector3 spawnPointPosition = Vector3.zero;
+    public static int currentID = 0;
+    public static List<PlanObjectData> planObjectsDataList = new List<PlanObjectData>();
+    public static GameObject PlayerContainer;
+
 
     public static bool LoadSaveFile(string name)
     {
@@ -67,4 +74,12 @@ public static class ObjectsDataRepository
         //currentSaveFile.planObjectsDataList.RemoveAll(x => x.id == id);
     }
 
+
+    static void Update()
+    {
+        PlayerContainer.transform.position = new Vector3(spawnPointPosition.x, 1, spawnPointPosition.y);
+
+
+        GameObject.CreatePrimitive(PrimitiveType.Cube);
+    }
 }

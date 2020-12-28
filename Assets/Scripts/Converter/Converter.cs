@@ -9,19 +9,19 @@ public class Converter : MonoBehaviour
     public Material windowMaterial;
     public Material floorMaterial;
     public Material ceilingMaterial;
-
+    public GameObject PlayerContainer;
     public GameObject doorPrefab;
 
+
     List<WallChildObjectData> wallChildObjectDataList = new List<WallChildObjectData>();
-    //private static float wallHeight = 2.75f;
-    //private static float windowHeight = 2;
-    //private static float windowPositionY = 0.6f;
+
 
     private void Awake()
     {
         SpawnPlane();
         ConvertTo3D();
-        
+        PlayerContainer.transform.position = new Vector3 (ObjectsDataRepository.spawnPointPosition.x, 1, ObjectsDataRepository.spawnPointPosition.y);
+        _ = GameObject.CreatePrimitive(PrimitiveType.Cube);
     }
     
     private void ConvertTo3D()
