@@ -19,8 +19,8 @@ public class Converter : MonoBehaviour
     {
         SpawnPlane();
         ConvertTo3D();
-        PlayerContainer.transform.position = new Vector3 (ObjectsDataRepository.spawnPointPosition.x, 0, ObjectsDataRepository.spawnPointPosition.y); 
-
+        PlayerContainer.transform.position = new Vector3 (ObjectsDataRepository.spawnPointPosition.x, 1, ObjectsDataRepository.spawnPointPosition.y);
+        _ = GameObject.CreatePrimitive(PrimitiveType.Cube);
     }
     
     private void ConvertTo3D()
