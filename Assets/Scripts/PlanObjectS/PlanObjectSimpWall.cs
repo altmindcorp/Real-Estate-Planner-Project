@@ -13,7 +13,7 @@ public class PlanObjectSimpWall : PlanObject
 
     private GameObject GetPrefab(int id)
     {
-        Debug.Log("GetPrefab id = " + id);
+        //Debug.Log("GetPrefab id = " + id);
         return GameObject.Find("Plane").GetComponent<Plane>().GetPrefabByIndex(id);
     }
 
@@ -121,15 +121,24 @@ public class PlanObjectSimpWall : PlanObject
                     windowPlanObject.length = ObjectsParams.windowLength;
                     windowPlanObject.height = ObjectsParams.windowHeight;
                     windowPlanObject.positionHeight = ObjectsParams.windowPosition;
+                    windowPlanObject.wallID = this.id;
+                    
+                    
+
                     
                     windowPlanObject.CreatePlanObject(new Vector3(ObjectsParams.windowLength, maxBounds.y - minBounds.y));
-                    wallObjectData.AddWallChildId(windowPlanObject.id);
+
+                    (ObjectsDataRepository.currentSaveFile.planObjectsDataList.Find(x => x.id == wallObjectData.id) as WallObjectData).AddWallChildId(windowPlanObject.id);
+                    Debug.Log("Child Count in Wall: " + (ObjectsDataRepository.currentSaveFile.planObjectsDataList.Find(x => x.id == wallObjectData.id) as WallObjectData).wallChildsIdList.Count);
+                    Debug.Log("Wall id in Wall: " + this.id);
+                    //Debug.Log("Wall Children Count: " + wallObjectData.wallChildsIdList.Count);
+
                     //wallObjectData.wallChildObjectsDataList.Add(new WindowObjectData(windowPlanObject.meshFilter.mesh, windowPlanObject.transform.position, windowPlanObject.orientation, windowPlanObject.height, windowPlanObject.positionHeight, windowPlanObject.length, windowPlanObject.id));
                 }
 
                 else
                 {
-                    Debug.Log("Min Bounds: " + minSpawnBounds + ", Max Bounds: " + maxSpawnBounds + ", Point Position: " + pointPosition);
+                    //Debug.Log("Min Bounds: " + minSpawnBounds + ", Max Bounds: " + maxSpawnBounds + ", Point Position: " + pointPosition);
                 }
             }
             else if (direction == Vector3.up || direction == Vector3.down)
@@ -141,6 +150,7 @@ public class PlanObjectSimpWall : PlanObject
                     windowPlanObject.length = ObjectsParams.windowLength;
                     windowPlanObject.height = ObjectsParams.windowHeight;
                     windowPlanObject.positionHeight = ObjectsParams.windowPosition;
+                    windowPlanObject.wallID = this.id;
 
                     windowPlanObject.CreatePlanObject(new Vector3(maxBounds.x - minBounds.x, ObjectsParams.windowLength));
                     wallObjectData.AddWallChildId(windowPlanObject.id);
@@ -159,6 +169,7 @@ public class PlanObjectSimpWall : PlanObject
                     doorPlanObject.CreatePlanObject(new Vector3(ObjectsParams.doorLength, maxBounds.y - minBounds.y));
                     doorPlanObject.orientation = direction;
                     doorPlanObject.length = ObjectsParams.doorLength;
+                    doorPlanObject.id = this.id;
 
                     wallObjectData.AddWallChildId(doorPlanObject.id);
                     //wallObjectData.wallChildObjectsDataList.Add(new DoorObjectData(doorPlanObject.meshFilter.mesh, doorPlanObject.transform.position, doorPlanObject.orientation,doorPlanObject.length, doorPlanObject.id));
@@ -172,6 +183,8 @@ public class PlanObjectSimpWall : PlanObject
                     doorPlanObject.orientation = direction;
                     doorPlanObject.length = ObjectsParams.doorLength;
                     doorPlanObject.CreatePlanObject(new Vector3(maxBounds.x - minBounds.x, ObjectsParams.doorLength));
+                    doorPlanObject.id = this.id;
+
                     wallObjectData.AddWallChildId(doorPlanObject.id);
                     //wallObjectData.wallChildObjectsDataList.Add(new DoorObjectData(doorPlanObject.meshFilter.mesh, doorPlanObject.transform.position, doorPlanObject.orientation, doorPlanObject.length, doorPlanObject.id));
                 }

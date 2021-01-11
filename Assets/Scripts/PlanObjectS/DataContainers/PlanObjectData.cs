@@ -52,6 +52,8 @@ public class PlanObjectData : IComparer
         return newMesh;
     }
 
+    
+
     /*Vector3[] vertices = new Vector3[4];
     vertices[0] = new Vector3(0, 0, zDepth);
     vertices[1] = new Vector3(0, scale.y, zDepth);

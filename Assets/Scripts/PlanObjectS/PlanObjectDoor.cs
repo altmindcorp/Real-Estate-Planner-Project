@@ -29,6 +29,10 @@ public class PlanObjectDoor : PlanObjectWallChild
 
     public override void ReAddValues(PlanObjectData planObjData)
     {
-        
+        var doorData = planObjData as DoorObjectData;
+        this.orientation = doorData.orientation;
+        this.height = doorData.height;
+        this.length = doorData.length;
+        this.wallID = doorData.wallID;
     }
 }

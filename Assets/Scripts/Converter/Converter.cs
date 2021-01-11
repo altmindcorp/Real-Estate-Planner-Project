@@ -26,7 +26,7 @@ public class Converter : MonoBehaviour
     
     private void ConvertTo3D()
     {
-        Debug.Log("Count: " + ObjectsDataRepository.currentSaveFile.planObjectsDataList.Count);
+        //Debug.Log("Count: " + ObjectsDataRepository.currentSaveFile.planObjectsDataList.Count);
         foreach (PlanObjectData objData in ObjectsDataRepository.currentSaveFile.planObjectsDataList)
         {
             ConvertObject(objData);
@@ -48,12 +48,13 @@ public class Converter : MonoBehaviour
         Vector3[] wallVertices = planObjWallData.GetVertices();
 
         if (direction == Vector3.right || direction == Vector3.left)
-        { 
+        {
             wallChildObjectDataList.Sort(PlanObjectObjectComparer.SortByX);
-            
+
             var sortedWindows = from obj in wallChildObjectDataList
                                 orderby obj.position.x
                                 select obj;
+
 
             WallChildObjectData[] objectsArray = sortedWindows.ToArray();
             var wallWidth = planObjWallData.GetVertices()[2].y;
@@ -66,6 +67,7 @@ public class Converter : MonoBehaviour
 
             for (int i = 0; i < objectsArray.Length; i++)
             {
+
                 windowLength = objectsArray[i].length;
                 windowPosition = objectsArray[i].position;
 
@@ -215,10 +217,15 @@ public class Converter : MonoBehaviour
         {
             wallChildObjectDataList.Clear();
             var wallPlanObjData = planObjData as WallObjectData;
+            Debug.Log("Child Count in Converter: " + (ObjectsDataRepository.currentSaveFile.planObjectsDataList.Find(x => x.id == planObjData.id) as WallObjectData).wallChildsIdList.Count);
+            Debug.Log("Wall id in Converter: " + wallPlanObjData.id);
             foreach (int id in wallPlanObjData.wallChildsIdList)
             {
+                Debug.Log("Object id in converter: " + id);
                 wallChildObjectDataList.Add((WallChildObjectData)ObjectsDataRepository.currentSaveFile.planObjectsDataList.Find(x => x.id == id));
             }
+
+            //Debug.Log("Wall Child objects count: " + wallChildObjectDataList.Count);
 
             if (wallChildObjectDataList.Count!=0)
             {                
@@ -236,7 +243,7 @@ public class Converter : MonoBehaviour
         {
             CreateGameObject(ConvertObjectTo3D.CreateFloorGameObject(planObjData.GetMesh()), floorMaterial, planObjData.position, "Floor");
             CreateGameObject(ConvertObjectTo3D.CreateCeiling(planObjData.GetMesh()), ceilingMaterial, planObjData.position, 2.75f, "Ceiling");
-            Debug.Log("Floor Position: " + planObjData.position);
+            //Debug.Log("Floor Position: " + planObjData.position);
         }
     }
 

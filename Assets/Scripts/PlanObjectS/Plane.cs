@@ -49,6 +49,63 @@ public class Plane : MonoBehaviour, ISpawner
         }       
     }
 
+    public void RedoObject(PlanObjectData planObjData)
+    {
+        if (planObjData is AnchorObjectData)
+        {
+            var anchorObject = Instantiate(prefabs[1], this.transform, true).GetComponent<PlanObjectAnchor>();
+            anchorObject.transform.Translate(planObjData.position);
+            anchorObject.RecreatePlanObject(planObjData);
+        }
+
+        else if(planObjData is FloorObjectData)
+        {
+            var floorObject = Instantiate(prefabs[0], this.transform, true).GetComponent<Floor>();
+            floorObject.transform.Translate(planObjData.position);
+            floorObject.RecreatePlanObject(planObjData);
+        }
+
+        else if (planObjData is WallObjectData)
+        {
+            var wallObject = Instantiate(prefabs[2], this.transform, true).GetComponent<PlanObjectSimpWall>();
+            wallObject.transform.Translate(planObjData.position);
+            wallObject.RecreatePlanObject(planObjData);
+        }
+
+        else if (planObjData is WindowObjectData)
+        {
+            var windowObjectData = planObjData as WindowObjectData;
+            List<PlanObjectSimpWall> walls = new List<PlanObjectSimpWall>(); 
+            this.GetComponentsInChildren(walls);
+            //Debug.Log("Walls count: " + walls.Count);
+
+            PlanObjectSimpWall parentWall = walls.Find(x => x.id == windowObjectData.wallID);
+
+            ObjectsDataRepository.currentSaveFile.planObjectsDataList.Add(windowObjectData);
+            WallObjectData parentWallData = ObjectsDataRepository.currentSaveFile.planObjectsDataList.Find(x => x.id == windowObjectData.wallID) as WallObjectData;
+            parentWallData.wallChildsIdList.Add(windowObjectData.id);
+            //walls.Find(x => x.id == windowObjectData.wallID).planObjectWallChildIdList.Add(windowObjectData.id);
+            //Debug.Log("Wall Childs Count: " + parentWallData.wallChildsIdList.Count);
+            var windowObject = Instantiate(prefabs[3], planObjData.position, Quaternion.identity, parentWall.gameObject.transform).GetComponent<PlanObjectWindow>();
+            windowObject.RecreatePlanObject(planObjData);
+            //Debug.Log("Window id: " + windowObject.id);
+        }
+
+        else if (planObjData is DoorObjectData)
+        {
+            var doorObjectData = planObjData as DoorObjectData;
+            List<PlanObjectSimpWall> doors = new List<PlanObjectSimpWall>();
+            this.GetComponentsInChildren(doors);
+
+            doors.Find(x => x.id == doorObjectData.wallID).planObjectWallChildIdList.Add(doorObjectData.id);
+
+            var doorObject = Instantiate(prefabs[4], planObjData.position, Quaternion.identity, doors.Find(x => x.id == doorObjectData.wallID).gameObject.transform).GetComponent<PlanObjectWindow>();
+            doorObject.RecreatePlanObject(planObjData);
+        }
+
+        ObjectsDataRepository.currentSaveFile.planObjectsDataList.Add(planObjData);
+    }
+
     public GameObject GetPrefabByIndex(int id)
     {
         return prefabs[id];

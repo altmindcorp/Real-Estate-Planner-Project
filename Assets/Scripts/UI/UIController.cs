@@ -171,6 +171,7 @@ public class UIController : MonoBehaviour
 
     public void Undo()
     {
+        
         Plane.PlanObjectsList[Plane.PlanObjectsList.Count - 1].DestroyThisObject();
         Plane.PlanObjectsList.RemoveAt(Plane.PlanObjectsList.Count - 1);
     }
@@ -180,5 +181,14 @@ public class UIController : MonoBehaviour
         ObjectsDataRepository.currentSaveFile.spawnPosition = Vector3.zero;
         ObjectsDataRepository.currentSaveFile.spawnPositionIsSet = false;
         Destroy(GameObject.Find("Spawn Point(Clone)"));
+    }
+
+    public void Redo()
+    {
+        if (ObjectsDataRepository.removedPlanObjects.Count!=0)
+        {
+            GameObject.Find("Plane").GetComponent<Plane>().RedoObject(ObjectsDataRepository.removedPlanObjects[ObjectsDataRepository.removedPlanObjects.Count-1]);
+            ObjectsDataRepository.removedPlanObjects.RemoveAt(ObjectsDataRepository.removedPlanObjects.Count - 1);
+        }
     }
 }

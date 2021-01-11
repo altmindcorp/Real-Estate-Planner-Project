@@ -16,6 +16,7 @@ public static class ObjectsDataRepository
     public static Vector3 spawnPointPosition = Vector3.zero;
     public static int currentID = 0;
     public static List<PlanObjectData> planObjectsDataList = new List<PlanObjectData>();
+    public static List<PlanObjectData> removedPlanObjects = new List<PlanObjectData>();
     public static GameObject PlayerContainer;
 
 
@@ -70,7 +71,7 @@ public static class ObjectsDataRepository
 
     public static void RemoveObject(int id)
     {
-        //currentSaveFile.planObjectsDataList.RemoveAll(x => x.id == id);
+        currentSaveFile.planObjectsDataList.RemoveAll(x => x.id == id);
     }
 
 

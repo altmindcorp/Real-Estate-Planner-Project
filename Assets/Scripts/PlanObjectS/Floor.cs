@@ -157,7 +157,9 @@ public class Floor : PlanObject
 
     public override void ReAddValues(PlanObjectData planObjData)
     {
+
         floorData = planObjData as FloorObjectData;
+        meshFilter.mesh.vertices = floorData.GetVertices();
         anchorsPosition.Clear();
         foreach (Vector3 v in floorData.anchorVertices)
         {
@@ -172,6 +174,7 @@ public class Floor : PlanObject
     private float GetFloorArea(Vector3[] vertices)
     {
         var length = vertices.Length;
+        Debug.Log("Floor Vertices Length: " + vertices.Length);
         float floorArea = 0;
         for (int i = 0; i < length-1; i++)
         {

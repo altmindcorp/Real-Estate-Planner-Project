@@ -34,6 +34,7 @@ public abstract class PlanObject : MonoBehaviour, ISpawner
 
     public void CreatePlanObject(Vector3 scale)
     {
+
         this.id = ObjectsDataRepository.currentID;
         this.meshFilter.mesh = MeshCreator.Create2DMesh(scale, 0);
         RecalculateWorldBounds();
@@ -43,6 +44,7 @@ public abstract class PlanObject : MonoBehaviour, ISpawner
         AddAdditionalValues();
         Plane.PlanObjectsList.Add(this);
         ObjectsDataRepository.currentID++;
+        ObjectsDataRepository.removedPlanObjects.Clear();
     }
 
     public void RecalculateWorldBounds()
@@ -71,16 +73,18 @@ public abstract class PlanObject : MonoBehaviour, ISpawner
         //this.gameObject.AddComponent<BoxCollider>();
         RecalculateWorldBounds();
         //this.meshCollider.sharedMesh = this.meshFilter.mesh;
-        
+        Plane.PlanObjectsList.Add(this);
     }
 
     public void DestroyThisObject()
     {
+        ObjectsDataRepository.removedPlanObjects.Add(ObjectsDataRepository.currentSaveFile.planObjectsDataList.Find(x => x.id == this.id));
+        ObjectsDataRepository.currentSaveFile.planObjectsDataList.RemoveAll(x => x.id == this.id);
         Destroy(this.gameObject);
     }
 
     public void OnDestroy()
     {
-        ObjectsDataRepository.RemoveObject(this.id);
+        //ObjectsDataRepository.RemoveObject(this.id);
     }
 }

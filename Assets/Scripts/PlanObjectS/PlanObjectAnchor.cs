@@ -155,7 +155,7 @@ public class PlanObjectAnchor: PlanObject
         var planObjAnchorData = planObjData as AnchorObjectData;
         this.scale = planObjAnchorData.scale;
         //Debug.Log("Anchor scale: " + this.scale);
-
         
+
     }
 }

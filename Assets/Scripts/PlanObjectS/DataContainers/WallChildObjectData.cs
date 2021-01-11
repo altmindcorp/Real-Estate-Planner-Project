@@ -8,6 +8,6 @@ public abstract class WallChildObjectData : PlanObjectData
     public float height;
     public float length;
     public Vector3 orientation;
-    
-    
+    public int wallID;
+
 }

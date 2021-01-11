@@ -9,7 +9,8 @@ public class PlanObjectWindow : PlanObjectWallChild
 
     public override void AddAdditionalValues()
     {
-        ObjectsDataRepository.currentSaveFile.planObjectsDataList.Add(new WindowObjectData(this.meshFilter.mesh, this.transform.position, this.orientation, this.height, this.positionHeight, this.length, this.id));
+        Debug.Log("Window id in window: " + this.id);
+        ObjectsDataRepository.currentSaveFile.planObjectsDataList.Add(new WindowObjectData(this.meshFilter.mesh, this.transform.position, this.orientation, this.height, this.positionHeight, this.length, this.id, this.wallID));
     }
 
     public override void OnMouseDown()
@@ -22,11 +23,6 @@ public class PlanObjectWindow : PlanObjectWallChild
         //throw new System.NotImplementedException();
     }
 
-    public void OnDestroy()
-    {
-        //ObjectsDataRepository.planObjectsDataList.RemoveAt(ObjectsDataRepository.planObjectsDataList.Count - 1);
-    }
-
     public override void ReAddValues(PlanObjectData planObjData)
     {
         var windowData = planObjData as WindowObjectData;
@@ -34,6 +30,6 @@ public class PlanObjectWindow : PlanObjectWallChild
         this.positionHeight = windowData.positionHeight;
         this.height = windowData.height;
         this.length = windowData.length;
-        
+        this.wallID = windowData.wallID;
     }
 }
