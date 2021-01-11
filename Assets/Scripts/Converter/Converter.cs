@@ -12,18 +12,27 @@ public class Converter : MonoBehaviour
     public GameObject PlayerContainer;
     public GameObject doorPrefab;
 
-
+    private bool objectsLoaded = false;
     List<WallChildObjectData> wallChildObjectDataList = new List<WallChildObjectData>();
+
 
 
     private void Awake()
     {
-        SpawnPlane();
-        ConvertTo3D();
-        PlayerContainer.transform.position = new Vector3 (ObjectsDataRepository.currentSaveFile.spawnPosition.x, 1, ObjectsDataRepository.currentSaveFile.spawnPosition.y);
+        //Create3DScene();
         //_ = GameObject.CreatePrimitive(PrimitiveType.Cube);
     }
-    
+
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.Space) && !objectsLoaded)
+        {
+            objectsLoaded = true;
+            ObjectsDataRepository.LoadSaveFile("testsave");
+            Create3DScene();
+        }
+    }
+    //load from current save
     private void ConvertTo3D()
     {
         //Debug.Log("Count: " + ObjectsDataRepository.currentSaveFile.planObjectsDataList.Count);
@@ -39,7 +48,12 @@ public class Converter : MonoBehaviour
         }*/
     }
 
-    
+    public void Create3DScene()
+    {
+        //SpawnPlane();
+        ConvertTo3D();
+        PlayerContainer.transform.position = new Vector3(ObjectsDataRepository.currentSaveFile.spawnPosition.x, 1, ObjectsDataRepository.currentSaveFile.spawnPosition.y);
+    }
 
     public void CreateWallWithObjects(WallObjectData planObjWallData)
     {
@@ -187,7 +201,7 @@ public class Converter : MonoBehaviour
         newGameObject.AddComponent<MeshRenderer>().material = material;
         newGameObject.AddComponent<MeshCollider>().sharedMesh = mesh;
         newGameObject.transform.Translate(new Vector3(position.x, 0, position.y));
-        
+        newGameObject.transform.parent = this.transform;
     }
 
     private void CreateGameObject(Mesh mesh, Material material, Vector3 position, float height, string name)
@@ -197,18 +211,7 @@ public class Converter : MonoBehaviour
         newGameObject.AddComponent<MeshRenderer>().material = material;
         newGameObject.AddComponent<MeshCollider>().sharedMesh = mesh;
         newGameObject.transform.Translate(new Vector3(position.x, height, position.y));
-
-    }
-
-    private void CreateSimpleWall(PlanObjectSimpWall planObjWall)
-    {
-       //CreateGameObject(ConvertObjectTo3D.CreateSimpleWallGameObject(planObjWall.vertices, wallHeight), wallMaterial, "Not Divided Simple Wall");
-        
-    }
-
-    private void CreateSimpleWall(WallObjectData wallData)
-    {
-
+        newGameObject.transform.parent = this.transform;
     }
 
     private void ConvertObject(PlanObjectData planObjData)
@@ -247,11 +250,6 @@ public class Converter : MonoBehaviour
         }
     }
 
-    private void CreateFloor(Floor floorObject)
-    {
-        //CreateGameObject(ConvertObjectTo3D.CreateFloorGameObject(floorObject.meshFilter.mesh), floorMaterial, "Floor");
-        Destroy(floorObject);
-    }
     private void SpawnPlane()
     {
         GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
